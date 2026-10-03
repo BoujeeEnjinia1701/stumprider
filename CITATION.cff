@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use or build on this design, please cite it as below."
+type: software
+title: "StumpRider"
+abstract: "Frees gillnets snagged on submerged trees from the canoe so children are not sent to dive."
+authors:
+  - given-names: Amish
+    family-names: Chadha
+    affiliation: Design Molecule
+    orcid: "https://orcid.org/0009-0000-8079-7141"
+repository-code: "https://github.com/BoujeeEnjinia1701/stumprider"
+url: "https://designmolecule.com"
+license: CERN-OHL-S-2.0
+keywords:
+  - open-hardware
+  - inland-fisheries
+  - child-safety
+  - gillnet
+  - hand-tools
+  - food-security

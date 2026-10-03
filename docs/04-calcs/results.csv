@@ -1,0 +1,80 @@
+tag,item,value,unit,requirement,status
+M1,Rider ring with hinge bolt and gate pin,0.612,kg,,
+M2,Pole head,0.557,kg,,
+M3,"Three pole sections, two sleeves, rivets, lock pins, cap",2.558,kg,,
+M4,Jigging weight,1.108,kg,,
+M5,"Gunwale crutch (frame, roller, axle, clamp)",1.366,kg,,
+M6,"Tether cord, float winder, spare pins",0.293,kg,,
+M7,"Working tool (ring, head, pole, pins)",3.73,kg,,
+M8,Whole kit as stowed in the canoe,6.497,kg,R7,not met
+M9,Longest packed piece (a section with its sleeve),1550.0,mm,R7,met
+P1,"Shear pin rating, 2.0 mm soft aluminium in double shear (nominal)",301.593,N,,
+P2,"Pin band allowed by R3, low",256.354,N,,
+P3,"Pin band allowed by R3, high (used for every safety check)",346.832,N,,
+H1,design canoe: displacement,550.0,kg,,
+H2,design canoe: metacentric height GM,0.693,m,,
+H3,design canoe: freeboard; heel that puts the gunwale under,461.111,mm,,
+H4,design canoe: gunwale immersion angle,39.976,deg,,
+H5,"design canoe: heel when the pin breaks at the top of its band, kneeling",3.409,deg,R3,met
+H6,"design canoe: heel when the pin breaks at the top of its band, standing",4.411,deg,R3,met
+H7,"design canoe: pole pull that heels the canoe 5 deg, kneeling",522.556,N,,
+H8,"design canoe: pole pull that heels the canoe 5 deg, standing",396.098,N,,
+K1,small dugout: displacement,280.0,kg,,
+K2,small dugout: metacentric height GM,0.149,m,,
+K3,small dugout: freeboard; heel that puts the gunwale under,299.158,mm,,
+K4,small dugout: gunwale immersion angle,38.581,deg,,
+K5,"small dugout: heel when the pin breaks at the top of its band, kneeling",23.673,deg,R3,at risk
+K6,"small dugout: heel when the pin breaks at the top of its band, standing",34.087,deg,R3,at risk
+K7,"small dugout: pole pull that heels the canoe 5 deg, kneeling",53.439,N,,
+K8,"small dugout: pole pull that heels the canoe 5 deg, standing",37.431,N,,
+F1,"Pull to lift a hooked net, low friction (mu 0.3)",81.327,N,,
+F2,"Pull to lift a hooked net, high friction (mu 0.5)",126.21,N,R1,met
+F3,"Pull to lift a net wrapped once round, low friction",368.04,N,,
+F4,"Pull to lift a net wrapped once round, high friction",2256.356,N,R1,at risk
+F5,"Margin of the low end of the pin band over the hooked case, high friction",2.031,x,,
+F6,"Pull if the crew keeps full tension while the operator lifts (hooked, high friction)",196.21,N,,
+R1,"Working length, top hand to ring centre",4.181,m,R2,met
+R2,"Ring depth below the surface at 20 deg lean, kneeling",3.168,m,,
+R3,"Tether reach below the surface, jigging",8.0,m,R2,met
+R4,Ring inside diameter,100.0,mm,R6,met
+S1,"Euler buckling load of the whole pole, pinned ends",766.567,N,,
+S2,Buckling factor over the top of the pin band (push),2.21,x,,
+S3,"Lock pin factor, 6 mm stainless in double shear",48.913,x,,
+S4,Pole wall bearing factor at a lock pin hole,22.143,x,,
+S5,"Rivet factor, two rivets per sleeve (pull only)",16.723,x,,
+S6,Tang tear-out factor above the shear pin hole,43.662,x,,
+S7,"Ring bending stress, pulled at the tang against the far side",36.443,MPa,,
+S8,Ring bending factor on yield,6.448,x,,
+S9,"Tang bending factor, quarter of the pull sideways",6.505,x,,
+S10,"Crutch axle bending stress at 500 N line tension (M12, grade 4.6)",91.699,MPa,,
+B1,Float winder net lift,1.257,kg,,
+B2,"Ring and cord, weight in water",0.603,kg,,
+B3,Reserve: lift over ring and cord,2.085,x,,
+B4,"Ring, cord and jigging weight, weight in water (the float does not hold this)",1.57,kg,,
+T1,"Workshop time for one kit, one smith (estimate)",7.667,h,R9,met
+C1,Parts cost of one kit (prototype prices),92.5,USD,R10,not met
+C2,Prototype run: three kits and 2 m of calibration wire,283.5,USD,,
+C3,Value-engineering target (project.yaml),2000.0,USD,,
+C4,Prototype run under the value-engineering target by,1716.5,USD,,
+C5,"Pole, sleeves and rivets, share of the kit cost",31.351,%,,
+C6,"Galvanising, share of the kit cost",12.973,%,,
+C7,"Gunwale crutch, share of the kit cost",12.973,%,,
+O1,Kit mass without the jigging weight,5.389,kg,,
+O2,Kit mass with a hardwood crutch block in place of the steel frame,6.01,kg,,
+O3,Kit mass with bamboo pole sections and steel ferrules,5.845,kg,,
+O4,Kit mass with options O1 and O2 together,4.902,kg,,
+O5,Kit cost with bamboo pole sections and steel ferrules,70.5,USD,,
+O6,Kit cost with zinc-rich paint in place of galvanising,83.5,USD,,
+O7,"Kit cost with crutch and weight shared, one set per five canoes",74.9,USD,,
+O8,Kit cost with bamboo pole and shared crutch and weight,52.9,USD,,
+O9,Carried kit with the crutch left clamped on the canoe and the weight kept at the landing,4.023,kg,,
+O10,Carried kit as O9 with bamboo pole sections and steel ferrules,3.371,kg,,
+O11,"Light pin, 1.4 mm wire: nominal rating",147.781,N,,
+L1,"small dugout, light pin: displacement",280.0,kg,,
+L2,"small dugout, light pin: metacentric height GM",0.149,m,,
+L3,"small dugout, light pin: freeboard; heel that puts the gunwale under",299.158,mm,,
+L4,"small dugout, light pin: gunwale immersion angle",38.581,deg,,
+L5,"small dugout, light pin: heel when the pin breaks at the top of its band, kneeling",12.239,deg,R3,at risk
+L6,"small dugout, light pin: heel when the pin breaks at the top of its band, standing",16.85,deg,R3,at risk
+L7,"small dugout, light pin: pole pull that heels the canoe 5 deg, kneeling",53.439,N,,
+L8,"small dugout, light pin: pole pull that heels the canoe 5 deg, standing",37.431,N,,
