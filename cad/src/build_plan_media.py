@@ -4,7 +4,8 @@ Run from the repo root:  python cad/src/build_plan_media.py [overview|sheets|joi
 With no argument it draws everything. Every picture is drawn from cad/src/model.py, so the
 pictures and the model never disagree:
     docs/05-build-plan/overview.png    every component, laid out as packed, numbered in build order
-    cad/drawings/SMR-DWG-101 to 111    making sketches for the made components (111: hook head, SMR-DDR-003)
+    cad/drawings/SMR-DWG-101 to 112    making sketches for the made components (111 hook head,
+                                       112 bamboo local variant pole, SMR-DDR-003)
     docs/05-build-plan/joint-NN.png    close-ups of the joints that need explaining
     docs/05-build-plan/step-NN.png     one picture per assembly step
 Uses .kit/build_views.py. BUILD PLAN ILLUSTRATION, PLAN NOT YET BUILT.
@@ -32,7 +33,7 @@ COL = {"ring": "#B45309", "ring2": "#D97706", "hinge": "#6B7280", "gate": "#9CA3
        "shear": "#DC2626", "pole": "#94A3B8", "sleeve": "#475569", "rivet": "#374151", "lock": "#6B7280",
        "cap": "#111827", "tether": "#EA580C", "winder": "#F97316", "spares": "#A3A3A3", "weight": "#78350F",
        "cframe": "#1D4ED8", "roller": "#A8A29E", "clamp": "#4B5563", "line": "#D6D3D1", "gunwale": "#D6D3D1",
-       "hook": "#7C2D12"}
+       "hook": "#9A3412", "bamboo": "#CA8A04", "ferrule": "#57534E"}
 
 
 def win(xc, yc, zc, sx, sy, sz):
@@ -224,20 +225,38 @@ def sheets():
                         "Fits gunwales 30 to 60 thick: tighten by hand only.",
                         "Check: pad bears flat on the gunwale side."],
                        DATE, inset_view=(24, -40))
-    hk = Pos(-XP, 0, 0) * M.hook_head(P)
-    bv.component_sheet(Part("Hook head", hk, COL["hook"]),
-                       [Part("Pole head and shear pin", Pos(-XP, 0, 0) * Compound([t["head"], t["shear"]]), "#D1D5DB")],
-                       "StumpRider", "SMR-DWG-111", "Hook head (SMR-DDR-003)", "6 mm flat bar; 12 mm mild steel round bar",
-                       ["Flat: 6 x 28 x 50 flat bar; drill 2.1 for the shear",
-                        "  pin 10 from the top and 10.5 for the tether 26 below.",
-                        "Hook: about 150 of 12 bar; bend a J over a 56 mm",
-                        "  former, 30 straight below the flat, tip 30 long;",
-                        "  throat 44 inside, opening upward.",
-                        "Weld the shank square under the flat, on its centre line.",
-                        "Galvanise with the ring. Mass about 0.19 kg.",
-                        "Fit: in the fork in place of the ring, same shear pin.",
-                        "Check: swings freely in the fork; a 16 mm rope doubled",
-                        "  drops into the throat."],
+    bv.component_sheet(Part("Hook head", M.hook_head(P), COL["hook"]),
+                       [Part("Pole head and shear pin", Compound([t["head"], t["shear"]]), "#D1D5DB")],
+                       "StumpRider", "SMR-DWG-111", "Hook head (for nets wrapped round a branch)",
+                       "6 mm flat bar; 10 mm mild steel round bar",
+                       ["Flat: 6 x 28 flat bar, 60 long. Drill 10.5 at 12",
+                        "  and 2.1 at 50 from the bottom end, on the centre",
+                        "  line (the same holes as the ring's tang).",
+                        "Bar: about 220 of 10 round bar. Bend a J round a",
+                        "  50 pipe in the vice: 30 bend radius to the bar",
+                        "  centre, legs 60 apart, tip leg 35 long.",
+                        "Weld the long leg 10 up the flat's bottom edge,",
+                        "  both sides, in line with the flat. Galvanise.",
+                        "Check: the fork slides over the flat freely and a",
+                        "  2 rod passes cheek, flat and cheek."],
+                       DATE, inset_view=(20, -50))
+    bs = M.bamboo_sections(P)
+    layb = Rot(0, 90, 0) * Pos(-XP, 0, -(J1 - 120))
+    jw = win(XP, 0, J1, 80, 80, 260)
+    bv.component_sheet(Part("Ferrule on the lower culm", layb * Compound([M.ferrules(P)[0], M.ferrule_bolts(P)[0], bs[0] & jw]), COL["ferrule"]),
+                       [Part("Upper culm and lock pin", layb * Compound([bs[1] & jw, M.bamboo_lock_pins(P)[1]]), "#D1D5DB")],
+                       "StumpRider", "SMR-DWG-112", "Bamboo local variant: culms and ferrule joint",
+                       "Treated bamboo culm 36 mm; steel tube 40 x 1.5",
+                       ["Culms: three straight 1,450 lengths, 34 to 38",
+                        "  outside; top one cut just above a node. Soak in",
+                        "  borax and boric acid; whip each end with wire.",
+                        "Accept a culm only if 5 kg hung at the middle of",
+                        "  a 1.4 m span sags 2.9 or less.",
+                        "Bottom culm: dress the bottom 120 to 31.8 for the",
+                        "  pole head; 6.5 hole 60 up. Ferrules: 160 of",
+                        "  40 x 1.5 tube; 5.3 hole 40 and 6.5 hole 120 from",
+                        "  one end. Set on the lower culm in epoxy with an",
+                        "  M5 bolt; next culm slides in, 6 mm lock pin."],
                        DATE, inset_view=(24, -50))
 
 
@@ -304,12 +323,23 @@ def joints():
              OUT / "joint-09.png", "Joint 9: roller on its axle, cut",
              "2 mm washer each side; nyloc nut snug so the roller spins and the cheeks are not pulled in",
              cut="+Y", elev=14, azim=-80)
-    w = win(XP, 0, 80, 120, 90, 260)
-    bv.joint([Part("Hook head", M.hook_head(P), COL["hook"]), Part("Pole head (fork)", t["head"] & w, COL["head"]),
-              Part("Shear pin 2 mm", t["shear"], COL["shear"])],
-             OUT / "joint-10.png", "Joint 10: hook head in the fork (SMR-DDR-003)",
-             "Ring off; the hook head's flat goes between the fork cheeks and takes the same shear pin",
-             elev=18, azim=-40)
+    w = win(XP, 0, 60, 70, 70, 140)
+    bv.joint([Part("Hook head flat (cut)", M.hook_head(P) & w, COL["hook"]),
+              Part("Fork cheeks and end plate (cut)", t["head"] & w, COL["head"]),
+              Part("Shear pin, ends bent", t["shear"], COL["shear"])],
+             OUT / "joint-10.png", "Joint 10: fork on the hook head, cut through the shear pin",
+             "Same fork, same calibrated pin as on the ring; the flat's top stops 45 mm short of the plate",
+             cut="+X", elev=12, azim=-160)
+    bs = M.bamboo_sections(P)
+    w = win(XP, 0, J1, 70, 70, 220)
+    bv.joint([Part("Lower culm (cut)", bs[0] & w, COL["bamboo"]),
+              Part("Upper culm (cut)", bs[1] & w, "#FDE68A"),
+              Part("Ferrule (cut)", M.ferrules(P)[0] & w, COL["ferrule"]),
+              Part("M5 bolt and nyloc nut", M.ferrule_bolts(P)[0], COL["rivet"]),
+              Part("Lock pin 6 mm", M.bamboo_lock_pins(P)[1], COL["lock"])],
+             OUT / "joint-11.png", "Joint 11: bamboo local variant, ferrule joint, cut",
+             "Ferrule set on the lower culm with epoxy and an M5 bolt; the upper culm butts on it and is held by the lock pin",
+             cut="+X", elev=12, azim=-160)
 
 
 # ------------------------------------------------------------------ steps
@@ -373,11 +403,12 @@ def steps():
     bv.step(ring_done + [Part("Tether", t["tether"] & win(100, 0, 60, 200, 200, 200), "#D1D5DB")], [wt, wp], OUT / "step-11.png",
             "Step 11: for deep snags, pin the jigging weight to the tang",
             "Pole head off first; weight cheeks over the tang, lock pin through the middle hole", elev=18, azim=-50)
-    hkp = Part("Hook head", M.hook_head(P), COL["hook"])
-    pole_on = Part("Pole with head", end, COL["head"], None, (0, 0, 120))
+    hk = Part("Hook head", M.hook_head(P), COL["hook"], None, (0, 0, -150))
     sh2 = Part("Shear pin", t["shear"], COL["shear"], None, (0, -60, 0))
-    bv.step([hkp], [pole_on, sh2], OUT / "step-12.png", "Step 12: for a wrapped net, put the fork on the hook head",
-            "Ring off the pole first; same shear pin, ends bent over; draw the bight back round the branch half a turn at a time",
+    kn = Part("Tether bowline, moved across", M.hook_knot(P), COL["tether"], None, (80, 0, 0))
+    bv.step([Part("Pole head", Compound([t["head"], M.pole_sections(P)[0] & w0, M.lock_pins(P)[0]]), "#D1D5DB")],
+            [hk, sh2, kn], OUT / "step-12.png", "Step 12: for a net wrapped round a branch, pin on the hook head",
+            "Draw the pin, lift the fork off the ring, put it over the hook head, fit a calibrated pin; move the tether across",
             elev=18, azim=-50)
     _ = seq
 

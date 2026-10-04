@@ -1,4 +1,4 @@
-"""StumpRider sizing calculations (SMR-CAL-001 v0.2), with the round 2 requirement decisions (SMR-DDR-003).
+"""StumpRider sizing calculations (SMR-CAL-001).
 
 Run from the repo root:  python docs/04-calcs/sizing.py
 Prints every result with a tag ([M1], [P2] ...) used in docs/04-calcs/01-sizing.md and writes
@@ -28,6 +28,8 @@ A = {
     "rho_steel": 7850.0, "rho_al": 2700.0, "rho_ss": 7900.0, "rho_hdpe": 950.0, "rho_foam": 30.0,
     "rho_rubber": 1100.0, "cord_kg_m": 0.025, "rho_polyester": 1380.0, "rho_water": 1000.0,
     "E_al": 69000.0,            # MPa, 6063-T6
+    "rho_bamboo": 700.0,        # kg/m3, seasoned treated bamboo culm (assumed; SMR-DDR-003)
+    "E_bamboo": 15000.0,        # MPa, along the culm (10 to 20 GPa range; assumed, to be measured by a bend test)
     "tau_pin": 48.0,            # MPa, shear strength of 1050-O / 1100-O wire (about 0.6 x 80 MPa tensile), assumed
     "tau_pin_band": 0.15,       # +/- band on the pin rating that R3 allows
     "fy_steel": 235.0,          # MPa, S235 mild steel
@@ -62,9 +64,8 @@ A = {
         "shear pins: cut and deburr twelve": 15,
         "float winder: cut foam, paint": 20,
         "assemble, fit pins, tie tether, wind cord": 25,
-        "hook head: cut and drill the flat, bend the 12 mm bar over a former, weld (SMR-DDR-003)": 20,
+        "hook head: cut flat and bar, bend the J, weld, drill": 25,
     },
-    "interim_rule": "only canoes of 7 m or more with at least three crew",   # printed on the pole head (D-A2 A)
 }
 
 
@@ -84,7 +85,7 @@ def masses():
            "clamp": "rho_steel", "hook": "rho_steel"}
     m = {}
     for k, r in rho.items():
-        m[k] = c[k].volume * 1e-9 * A[r]
+        m[k] = sum(q.volume for q in c[k].solids()) * 1e-9 * A[r]   # by solid: nested compounds report no volume
     m["locks"] = m["locks"] * 4 / 3            # four pins; three are fitted in the model
     m["spares"] = 0.004                         # vial and eleven pins
     rol, wash = M.crutch_roller(P)
@@ -100,13 +101,12 @@ def masses():
     out("M5", "Gunwale crutch (frame, roller, axle, clamp)", m["cframe"] + m["roller"] + m["clamp"], "kg")
     out("M6", "Tether cord, float winder, spare pins", m["tether"] + m["winder"] + m["spares"], "kg")
     out("M7", "Working tool (ring, head, pole, pins)", tool, "kg")
-    out("M8", "Whole kit, everything listed in the BOM", kit, "kg")
+    out("M8", "Whole kit, including the crutch and jigging weight", kit, "kg")
     out("M9", "Longest packed piece (a section with its sleeve)", D["packed_L"], "mm", "R7", "met")
     out("M10", "Hook head (SMR-DDR-003)", m["hook"], "kg")
-    carried = sum(m[k] for k in ("ring", "hinge", "gate", "head", "shear", "poles", "sleeves", "rivets", "locks", "cap",
-                                 "tether", "winder", "spares", "hook"))
-    out("M11", "Kit carried in the canoe: crutch left clamped on the canoe, jigging weight kept at the landing (D-A3 A), "
-               "with the hook head", carried, "kg", "R7", "met" if carried < 4.0 else f"not met ({carried - 4.0:.2f} kg over)")
+    carried = kit - m["cframe"] - m["roller"] - m["clamp"] - m["weight"]
+    out("M11", "Carried kit, aluminium prototype: crutch stays clamped on the canoe, jigging weight kept at the landing",
+        carried, "kg", "R7", "met" if carried < 4.0 else "not met")
     return m, kit
 
 
@@ -152,11 +152,10 @@ def canoe(cn, F, tag0, excluded=False):
     out(f"{tag0}3", f"{cn['name']}: freeboard; heel that puts the gunwale under", fb * 1000, "mm")
     out(f"{tag0}4", f"{cn['name']}: gunwale immersion angle", immerse, "deg")
     st = "met" if res["standing"][0] <= A["heel_limit"] else "at risk"
-    stk = "met" if res["kneeling"][0] <= A["heel_limit"] else "at risk"
-    if excluded:      # D-A2 A: the interim rule printed on the pole head keeps the tool off this canoe
-        st = stk = "not served: excluded by the interim rule until the TRL 4 heel tests"
+    if excluded:
+        st = "outside the 7 m rule (SMR-DDR-003)"
     out(f"{tag0}5", f"{cn['name']}: heel when the pin breaks at the top of its band, kneeling", res["kneeling"][0], "deg",
-        "R3", stk)
+        "R3", st if excluded else ("met" if res["kneeling"][0] <= A["heel_limit"] else "at risk"))
     out(f"{tag0}6", f"{cn['name']}: heel when the pin breaks at the top of its band, standing", res["standing"][0], "deg", "R3", st)
     out(f"{tag0}7", f"{cn['name']}: pole pull that heels the canoe 5 deg, kneeling", res["kneeling"][1], "N")
     out(f"{tag0}8", f"{cn['name']}: pole pull that heels the canoe 5 deg, standing", res["standing"][1], "N")
@@ -175,11 +174,11 @@ def freeing(F_lo):
     out("F3", "Pull to lift a net wrapped once round, low friction", rows[2][2], "N")
     out("F4", "Pull to lift a net wrapped once round, high friction", rows[3][2], "N", "R1", "at risk")
     out("F5", "Margin of the low end of the pin band over the hooked case, high friction", F_lo / rows[1][2], "x")
+    for tag, mu in (("F7", A["mu"][0]), ("F8", A["mu"][1])):
+        f1 = A["net_leg_N"] * math.exp(mu * 2 * math.pi) + A["crew_slack_N"]
+        out(tag, f"Pull to lift once the hook has worked the wrap back half a turn (one full turn left), mu {mu}", f1, "N")
     f_hold = A["net_leg_N"] * math.exp(A["mu"][1] * math.pi) + A["crew_hold_N"]
     out("F6", "Pull if the crew keeps full tension while the operator lifts (hooked, high friction)", f_hold, "N")
-    out("F7", "Hook head (SMR-DDR-003): pinned in the same fork with the same shear pin, so it pulls with at most the top of the "
-              "pin band; it unwinds a wrap by drawing the bight back round the branch, half a turn at a time", F_lo / (1 - A["tau_pin_band"]) * (1 + A["tau_pin_band"]), "N",
-        "R1", "at risk: hook head and technique tried in the TRL 4 staged-snag trials")
     return rows
 
 
@@ -248,26 +247,79 @@ def flotation(m):
 # ------------------------------------------------------------------ 8. build time and cost
 def build_and_cost():
     mins = sum(A["build_min"].values())
-    out("T1", "Workshop time for one kit, one smith (estimate)", mins / 60, "h", "R9", "met" if mins <= 8 * 60 else "not met")
+    out("T1", "Workshop time for one kit, one smith (estimate)", mins / 60, "h", "R9", "met" if mins <= 8 * 60 else ("at risk" if mins <= 1.05 * 8 * 60 else "not met"))
     rows = list(csv.DictReader((ROOT / "bom" / "bom.csv").open()))
     kit = sum(float(r["qty"]) * float(r["unit_cost_usd"]) for r in rows)
-    out("C1", "Parts cost of one kit (prototype prices)", kit, "USD", "R10", "not met" if kit > 40 else "met")
-    run = 3 * kit + 6.0
-    out("C2", "Prototype run: three kits and 2 m of calibration wire", run, "USD")
+    out("C1", "Parts cost of one kit (prototype prices)", kit, "USD")
+    vrows = list(csv.DictReader((ROOT / "bom" / "bom-bamboo-variant.csv").open()))
+    vset = sum(float(r["qty"]) * float(r["unit_cost_usd"]) for r in vrows)
+    run = 3 * kit + vset + 6.0
+    out("C2", "Prototype run: three aluminium kits, one bamboo pole set and 2 m of calibration wire", run, "USD")
     out("C3", "Value-engineering target (project.yaml)", 2000.0, "USD")
     out("C4", "Prototype run under the value-engineering target by", 2000.0 - run, "USD")
     by = {r["line"]: float(r["qty"]) * float(r["unit_cost_usd"]) for r in rows}
     pole = by["6"] + by["7"] + by["8"]
     out("C5", "Pole, sleeves and rivets, share of the kit cost", pole / kit * 100, "%")
-    vrows = list(csv.DictReader((ROOT / "bom" / "bom-local-variant.csv").open()))
-    var = sum(float(r["qty"]) * float(r["unit_cost_usd"]) for r in vrows)
-    out("C8", "Local production variant, one kit (bamboo sections, crutch and weight shared by five canoes; bom/bom-local-variant.csv)",
-        var, "USD", "R10", "not met" if var > 40 else "met")
     galv = by["18"]
     out("C6", "Galvanising, share of the kit cost", galv / kit * 100, "%")
     crutch = by["15"] + by["16"] + by["17"]
     out("C7", "Gunwale crutch, share of the kit cost", crutch / kit * 100, "%")
-    return kit, by
+    return kit, by, vset
+
+
+# ------------------------------------------------------------------ 9. bamboo local variant (SMR-DDR-003)
+def bamboo(m, kit, by, vset):
+    bs = M.bamboo_sections(P)
+    culms = sum(q.volume for q in bs) * 1e-9 * A["rho_bamboo"]
+    fer = sum(q.volume for q in M.ferrules(P)) * 1e-9 * A["rho_steel"]
+    bolts = sum(q.volume for q in M.ferrule_bolts(P)) * 1e-9 * A["rho_ss"]
+    pole = culms + fer + bolts
+    al = m["poles"] + m["sleeves"] + m["rivets"] + m["cap"]
+    out("V1", "Bamboo pole: three culm sections, two ferrules and bolts", pole, "kg")
+    out("V2", "Aluminium pole it replaces: sections, sleeves, rivets and grip cap", al, "kg")
+    kitm = sum(m.values())
+    carried = kitm - m["cframe"] - m["roller"] - m["clamp"] - m["weight"] - al + pole
+    out("V3", "Carried kit, bamboo local variant (crutch on the canoe, weight at the landing)", carried, "kg",
+        "R7", "met" if carried < 4.0 else "not met")
+    od, w = P["culm"]
+    I = math.pi / 64 * (od ** 4 - (od - 2 * w) ** 4)
+    L = P["section_L"] * P["n_sections"]
+    Pcr = math.pi ** 2 * A["E_bamboo"] * I / L ** 2
+    _, _, hi = pin_band()
+    out("V4", "Euler buckling load of the bamboo pole, pinned ends, E 15 GPa", Pcr, "N")
+    out("V5", "Bamboo pole buckling factor over the top of the pin band (push)", Pcr / hi, "x")
+    out("V6", "Bamboo pole buckling factor if E is 10 GPa (low end)", Pcr / hi * 10 / 15, "x")
+    span, Fb = 1400.0, 50.0
+    defl = Fb * span ** 3 / (48 * A["E_bamboo"] * I)
+    out("V10", "Culm bend test: largest sag at mid-span, 50 N (5 kg) hung at the middle of a 1.4 m span, for E 15 GPa", defl, "mm")
+    rows = {r["line"]: r for r in csv.DictReader((ROOT / "bom" / "bom.csv").open())}
+    removed = sum(float(rows[n]["qty"]) * float(rows[n]["unit_cost_usd"]) for n in ("6", "7", "8", "10"))
+    shared = (by["14"] + by["15"] + by["16"] + by["17"] + 6.0) * 0.8
+    out("V7", "Crutch and jigging weight with their galvanising, saving per kit when one set serves five canoes", shared, "USD")
+    v = kit - removed + vset - shared
+    out("V8", "Parts cost of one bamboo local variant kit, crutch and weight shared by five canoes", v, "USD",
+        "R10", "met" if v <= 40 else "not met")
+    out("V9", "Parts cost of one aluminium prototype kit", kit, "USD", "R10", "met" if kit <= 40 else "not met")
+    # new open decision (R7 and R9 on the aluminium prototype): a thinner pole wall
+    od_a, w_a = P["pole"]
+    w2 = 1.6
+    a1 = math.pi / 4 * (od_a ** 2 - (od_a - 2 * w_a) ** 2)
+    a2 = math.pi / 4 * (od_a ** 2 - (od_a - 2 * w2) ** 2)
+    save = (a1 - a2) * P["section_L"] * P["n_sections"] * 1e-9 * A["rho_al"]
+    carried_al = kitm - m["cframe"] - m["roller"] - m["clamp"] - m["weight"]
+    out("N1", "Carried kit, aluminium prototype with 32 x 1.6 pole tube in place of 32 x 2", carried_al - save, "kg")
+    I1 = math.pi / 64 * (od_a ** 4 - (od_a - 2 * w_a) ** 4)
+    I2 = math.pi / 64 * (od_a ** 4 - (od_a - 2 * w2) ** 4)
+    Pcr2 = math.pi ** 2 * A["E_al"] * I2 / L ** 2
+    out("N2", "Buckling factor of a 32 x 1.6 aluminium pole over the top of the pin band", Pcr2 / hi, "x")
+    _ = I1
+    return carried, v
+
+
+def pin_band():
+    d = P["shear_d"]
+    F = 2 * A["tau_pin"] * math.pi * d * d / 4
+    return F, F * (1 - A["tau_pin_band"]), F * (1 + A["tau_pin_band"])
 
 
 def main():
@@ -279,32 +331,13 @@ def main():
     reach()
     strength(hi)
     flotation(m)
-    kit, by = build_and_cost()
-    # options for the decisions (R7, R10): effects on mass and cost
-    out("O1", "Kit mass without the jigging weight", kit_mass - m["weight"], "kg")
-    hw_crutch = 0.45 + (m["roller"]) + m["clamp"]          # hardwood saddle block 0.45 kg (estimate)
-    out("O2", "Kit mass with a hardwood crutch block in place of the steel frame", kit_mass - m["cframe"] + 0.45, "kg")
-    bamboo = 3 * 1.45 * 0.38 + 2 * 0.12                    # 35 mm bamboo culm 0.38 kg/m, two steel ferrules 0.12 kg
-    al = m["poles"] + m["sleeves"] + m["rivets"]
-    out("O3", "Kit mass with bamboo pole sections and steel ferrules", kit_mass - al + bamboo, "kg")
-    out("O4", "Kit mass with options O1 and O2 together", kit_mass - m["weight"] - m["cframe"] + 0.45, "kg")
-    out("O5", "Kit cost with bamboo pole sections and steel ferrules", kit - (by["6"] + by["7"] + by["8"]) + 3.0 + 4.0, "USD")
-    out("O6", "Kit cost with zinc-rich paint in place of galvanising", kit - by["18"] + 3.0, "USD")
-    shared = (by["14"] + by["15"] + by["16"] + by["17"] + 6.0) * 0.8
-    out("O7", "Kit cost with crutch and weight shared, one set per five canoes", kit - shared, "USD")
-    out("O8", "Kit cost with bamboo pole and shared crutch and weight", kit - (by["6"] + by["7"] + by["8"]) + 7.0 - shared, "USD")
-    _ = hw_crutch
-    carried = sum(m[k] for k in ("ring", "hinge", "gate", "head", "shear", "poles", "sleeves", "rivets", "locks", "cap",
-                                 "tether", "winder", "spares"))
-    out("O9", "Carried kit with the crutch left clamped on the canoe and the weight kept at the landing, without the hook head", carried, "kg")
-    out("O10", "Carried kit as O9 with bamboo pole sections and steel ferrules, with the hook head (local production variant)",
-        carried - al + bamboo + m["hook"], "kg", "R7", "met" if carried - al + bamboo + m["hook"] < 4.0 else "not met")
-    # lighter pin for canoes under 7 m
+    kit, by, vset = build_and_cost()
+    bamboo(m, kit, by, vset)
+    # lighter pin for canoes under 7 m (background for the per-class pins of SMR-DDR-003; not adopted)
     d2 = 1.4
     F2 = 2 * A["tau_pin"] * math.pi * d2 * d2 / 4
     out("O11", "Light pin, 1.4 mm wire: nominal rating", F2, "N")
-    r2 = canoe(dict(A["small"], name="small dugout, light pin (D-A2 option B, not chosen)"), F2 * (1 + A["tau_pin_band"]), "L",
-               excluded=True)
+    r2 = canoe(dict(A["small"], name="small dugout, light pin"), F2 * (1 + A["tau_pin_band"]), "L", excluded=True)
     _ = r2
     with (ROOT / "docs" / "04-calcs" / "results.csv").open("w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=["tag", "item", "value", "unit", "requirement", "status"])

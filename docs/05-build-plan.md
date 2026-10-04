@@ -16,14 +16,14 @@ revisions:
 - version: "0.2"
   date: '2026-10-03'
   author: Amish Chadha
-  change: Round 2 decisions (SMR-DDR-003); hook head, interim rule lettered on the pole head, crutch kept on the canoe, local production variant costed for TRL 4
+  change: Amish's decisions of 2026-10-03 (SMR-DDR-003); hook head, bamboo local variant, crutch kept on the canoe and weight at the landing, heel tests by canoe class
 ---
 
 # StumpRider prototype build plan
 
 **Plan, not yet built.** How to build the first proof-of-concept StumpRider kit, component by component. Building and testing to it is TRL 4 work. Decisions still to be made are kept in the design decisions register (`docs/06-design-decisions.md`), not here.
 
-> **Safety:** StumpRider exists so that nobody enters the water. Nothing in this plan, including the first checks, puts a person in the water. The shear pin is the safety device: fit only pins from a reel that has passed the calibration in section 5, never a nail, bolt or steel wire. On the water, every person wears a life jacket, the operator kneels, and the crew cuts the net rather than risk a capsize. Until a heel test says otherwise, the tool is not used from a canoe under 7 m long or with fewer than three crew. Welding and galvanised steel give off fumes: weld in the open and never weld galvanised parts.
+> **Safety:** StumpRider exists so that nobody enters the water. Nothing in this plan, including the first checks, puts a person in the water. The shear pin is the safety device: fit only pins from a reel that has passed the calibration in section 5, never a nail, bolt or steel wire. On the water, every person wears a life jacket, the operator kneels, and the crew cuts the net rather than risk a capsize. The tool is used only from canoes 7 m or longer with at least three crew; a smaller canoe class is served only once a heel test has set a pin for it. Welding and galvanised steel give off fumes: weld in the open and never weld galvanised parts.
 
 ## 1. What you are building
 
@@ -31,7 +31,9 @@ revisions:
 
 *Figure 1. The kit, numbered in build order.*
 
-The kit is a release tool for a gillnet snagged on a drowned tree. A hinged steel ring closes round the net line and is pushed down onto the snag by a three-piece aluminium pole; the pole holds the ring by a fork and a thin aluminium shear pin that breaks before the pull can heel the canoe too far. A tether on a floating winder brings the ring back, a pinned-on weight works snags too deep for the pole, and a clamp-on crutch with a roller guides the net line over the gunwale. There are 18 components: eleven are made (the ring, pole head, shear pins, pole sections, sleeves, float winder, jigging weight, crutch frame, roller, clamp screw and the hook head for wrapped nets) and seven are bought (bolts, pins, rivets, cap, cord and a small tube). The steel parts are bent, cut, drilled and welded with a stick welder and then hot-dip galvanised; the aluminium parts are cut and drilled. The parts for one kit cost about USD 96 at prototype prices. The crutch stays clamped on the canoe as a fitting and the jigging weight is kept at the landing, so the kit carried in the canoe is about 4.2 kg.
+The kit is a release tool for a gillnet snagged on a drowned tree. A hinged steel ring closes round the net line and is pushed down onto the snag by a three-piece aluminium pole; the pole holds the ring by a fork and a thin aluminium shear pin that breaks before the pull can heel the canoe too far. A tether on a floating winder brings the ring back, a pinned-on weight works snags too deep for the pole, and a clamp-on crutch with a roller guides the net line over the gunwale. A hook head that fits the same fork pulls a net that has wrapped round a branch back round it. There are 18 components: eleven are made (the ring, pole head, shear pins, pole sections, sleeves, float winder, jigging weight, crutch frame, roller, clamp screw and hook head) and seven are bought (bolts, pins, rivets, cap, cord and a small tube). The steel parts are bent, cut, drilled and welded with a stick welder and then hot-dip galvanised; the aluminium parts are cut and drilled. The parts for one kit cost about USD 96 at prototype prices.
+
+The crutch stays clamped on the canoe as a fitting, and the jigging weight stays at the landing until a deep snag needs it, so the kit carried to and from the canoe weighs about 4.3 kg. A bamboo local variant (section 3.12) uses three treated bamboo culms joined by steel ferrules in place of the aluminium pole; everything else is the same, and one crutch and weight serve five canoes at a landing. It carries about 3.9 kg and its parts cost about USD 55 a kit. One bamboo pole is built alongside the aluminium kits so the two can be compared.
 
 ## 2. What changed to make it buildable
 
@@ -45,6 +47,8 @@ The kit is a release tool for a gillnet snagged on a drowned tree. A hinged stee
 | Jigging weight | A weight used on the tether cord | A weight that pins to the ring's tang in place of the pole | A weight loose on the cord would not move the ring |
 | Gunwale crutch | A roller or crutch | A clamp-on steel saddle with a plastic roller | Fits gunwales 30 to 60 mm thick without drilling the canoe |
 | Tether and float | Cord and float | A bowline through the tang; a notched foam winder | A defined tie; the float holds the ring and cord |
+| Hook head (SMR-DDR-003) | No tool for a wrapped net | A steel J hook on a flat that pins into the same fork with the same shear pin | A net wrapped round a branch needs more pull than the pin allows until it is worked back |
+| Bamboo local variant (SMR-DDR-003) | Aluminium pole only | Three treated bamboo culms with steel ferrules, beside the aluminium prototype | Lighter and cheaper where bamboo grows; one crutch and weight shared by five canoes |
 
 ![The pole head forked over the ring's tang, cut through the shear pin](05-build-plan/joint-04.png)
 
@@ -100,7 +104,7 @@ Sizes are in millimetres. Weld only bare steel; galvanise after all welding and 
 4. Hold the cheeks under the disc with an 8 thick spacer between them, centred on the disc and square to it, and weld them to the disc.
 5. Clamp the cheeks together on the spacer and drill a 2.1 hole through both, 55 below the disc, on their centre line.
 6. Drill a 6.5 hole straight across the tube, 60 above the disc.
-7. Galvanise. Paint "302 N PIN ONLY" on the tube, and under it the interim rule "ONLY CANOES 7 m OR LONGER WITH 3 CREW" (SMR-DDR-003). The rule stays until the heel tests by canoe class set a pin for smaller canoes.
+7. Galvanise. Paint "302 N PIN ONLY" on the tube.
 
 **How it fits the parts next to it.** The pole goes into the tube until it rests on the disc and is held by a lock pin. The cheeks straddle the ring's tang with 1 clear each side; the tang's top stops 45 below the disc, so it never touches it.
 
@@ -266,24 +270,48 @@ Sizes are in millimetres. Weld only bare steel; galvanise after all welding and 
 
 ![Making sketch: hook head](../cad/drawings/SMR-DWG-111.png)
 
-**What it is and what it is made from.** A second head for the end of the pole, used in place of the ring when a net is wrapped round a branch: a J hook that catches the bight of the net and draws it back round the branch (SMR-DDR-003). 6 x 28 flat bar and 12 round bar.
+**What it is and what it is made from.** A J hook of 10 mm steel round bar welded to a short flat with the same holes as the ring's tang, so it pins into the same fork. It weighs about 0.2 kg.
 
 **How to make it.**
 
-1. Cut 50 of 6 x 28 flat bar. Drill 2.1 for the shear pin 10 from the top and 10.5 for the tether 26 below it, on the centre line.
-2. Cut about 150 of 12 bar. Bend a J over a 56 round former: 30 straight, the bend, and a 30 tip parallel to the straight; the throat is 44 inside.
-3. Weld the straight end square under the flat, on its centre line, with the hook opening upward.
-4. Galvanise with the ring.
+1. Cut 60 of 6 x 28 flat bar. Drill a 10.5 hole 12 from one end and a 2.1 hole 50 from the same end, on the centre line.
+2. Cut about 220 of 10 round bar. Bend one end round a 50 pipe held in the vice into a J: the legs end up 60 apart, centre to centre, with a 50 gap between them, and the short leg 35 long.
+3. Weld the long leg to the flat, in line with it, running 10 up the flat's end with the 10.5 hole; weld both sides.
+4. Galvanise with the other steel parts.
 
-**How it fits the parts next to it.** With the ring off the pole, the flat goes between the fork cheeks and takes the same calibrated shear pin, so it lets go at the same load as the ring.
+**How it fits the parts next to it.** The fork goes over the flat in place of the ring's tang, held by a calibrated shear pin; the tether's bowline is moved to the 10.5 hole so the hook comes back if the pin breaks.
 
-![The hook head in the fork](05-build-plan/joint-10.png)
+![The fork on the hook head, cut](05-build-plan/joint-10.png)
 
-*Figure 11. Hook head in the fork, shear pin through.*
+*Figure 11. The hook head in the fork, held by the same shear pin.*
 
-**Check before moving on.** The hook head swings freely in the fork; a 2 rod passes cheek, flat and cheek holes when lined up; a 16 rope doubled drops into the throat. About 0.19 kg.
+**Check before moving on.** The fork slides over the flat freely; a 2 rod passes cheek, flat and cheek; the J's gap takes two fingers.
 
-### 3.12 Bought components
+### 3.12 Bamboo local variant pole
+
+![Making sketch: bamboo culms and ferrule joint](../cad/drawings/SMR-DWG-112.png)
+
+**What it is and what it is made from.** A pole of three bamboo culms in place of the aluminium sections, sleeves, rivets and grip cap (`bom/bom-bamboo-variant.csv`). Straight seasoned culms about 36 across (34 to 38), 1,450 long; two ferrules of 40 x 1.5 steel tube, 160 long; two M5 stainless bolts with nyloc nuts; epoxy. The ring, pole head, pins, hook head, tether and float are the same as in the aluminium kit.
+
+**How to make it.**
+
+1. Choose culms that are straight and free of splits. Bend-test each: rest it on two supports 1.4 apart and hang 5 kg at the middle. Use it only if it sags 2.9 or less.
+2. Cut three 1,450 lengths. Cut the top one just above a node so the node closes its end.
+3. Soak the culms in a borax and boric acid solution for a week, then dry them in the shade. Whip each end with galvanised wire.
+4. Dress the bottom 120 of the bottom culm down to 31.8 with a rasp and file until it slides into the pole head. Drill 6.5 across it, 60 from the bottom end.
+5. Cut two 160 lengths of 40 x 1.5 tube; deburr. Drill 5.3 across, 40 from one end, and 6.5 across, 120 from the same end. Paint with zinc-rich paint.
+6. Push a ferrule 80 onto the top of the bottom culm, bolt end first, with epoxy on the culm. Drill 5.3 through the culm through the ferrule's hole and fit an M5 bolt and nyloc nut. Do the same on the middle culm.
+7. Push the next culm into each ferrule until it butts, and drill 6.5 through it through the ferrule's lock pin hole.
+
+**How it fits the parts next to it.** The bottom culm goes into the pole head and is held by the head lock pin; the culms are joined by the ferrules and the same 6 mm lock pins as the aluminium pole.
+
+![The ferrule joint, cut](05-build-plan/joint-11.png)
+
+*Figure 12. Ferrule joint: bolted and glued below, pinned above.*
+
+**Check before moving on.** Every culm passed the bend test; the joints have no play you can feel; the longest piece packs under 1.6 m.
+
+### 3.13 Bought components
 
 - **Hinge bolt (2):** M8 x 30 stainless bolt, nyloc nut and two washers.
 - **Gate pin (3):** 8 x 30 stainless clevis pin with an R-clip; tie a 300 length of 3 cord through the R-clip and round the gate ear.
@@ -353,23 +381,19 @@ Run the clamp screw into the welded nut from outside the inboard leg, pad end fi
 
 ![Step 10](05-build-plan/step-10.png)
 
-Near the bow, where the operator will kneel, set the web on the gunwale with the outboard leg against the outside. Tighten the clamp screw by hand. Hold point: the crutch must not move when pulled hard by hand.
+Near the bow, where the operator will kneel, set the web on the gunwale with the outboard leg against the outside. Tighten the clamp screw by hand. Hold point: the crutch must not move when pulled hard by hand. The crutch stays on the canoe as a fitting; it is not carried home with the kit.
 
 ### Step 11: jigging set-up (deep snags only)
 
 ![Step 11](05-build-plan/step-11.png)
 
-Take out the shear pin and lift the pole head off the tang. Put the jigging weight's cheeks over the tang and fit a lock pin through the middle hole. Tie the tether's end to a thwart before working. The jigging weight is kept at the landing and taken out only for a known deep set.
+The jigging weight is kept at the landing and taken out only for a known deep set. Take out the shear pin and lift the pole head off the tang. Put the jigging weight's cheeks over the tang and fit a lock pin through the middle hole. Tie the tether's end to a thwart before working.
 
-### Step 12: hook head (wrapped nets only)
+### Step 12: hook head (net wrapped round a branch)
 
 ![Step 12](05-build-plan/step-12.png)
 
-Take out the shear pin and lift the pole head off the ring's tang. Put the fork over the hook head's flat, push a calibrated shear pin through and bend both ends over. Run the hook down beside the net line, catch the bight below the branch and draw it back round the branch half a turn at a time, kneeling, with the crew slackening the line. If the net does not come, cut it. Walking the ring back round the branch is still taught and tried first.
-
-### Local production variant (costed, built alongside at TRL 4)
-
-The aluminium kit above is the design. A local production variant is costed line by line in `bom/bom-local-variant.csv` (SMR-DDR-003): three seasoned bamboo sections about 35 mm across, cut so a node closes each end and treated against rot, joined by pinned steel ferrules in place of the aluminium sleeves and rivets; and one crutch and jigging weight shared by five canoes at a landing. It costs about USD 56 a kit and the carried kit is about 3.6 kg. It is built beside the aluminium prototype at TRL 4 so stiffness, rot and cost can be compared; it is not drawn at TRL 3.
+When the ring will not lift a net that has wrapped round a branch, bring the ring back up the line. Draw the shear pin, lift the fork off the ring's tang and put it over the hook head's flat; push a calibrated pin through and bend its ends. Untie the tether's bowline from the ring and tie it through the hook head's 10.5 hole. Reach down beside the net line, hook the bight of net where it goes round the branch and pull it back the way it wrapped, half a turn at a time, with the crew's line slack. Then change back to the ring and lift the net off. Hold point: the same rules apply as with the ring: kneel, slacken the line, and cut the net if the canoe heels.
 
 ## 5. First checks
 
@@ -381,9 +405,11 @@ The aluminium kit above is the design. A local production variant is costed line
 | 2 | Ring fit | R6 | Close the ring on lines of 4, 8, 12 and 16 mm; slide it 1 m along each | Closes on every line and slides without catching |
 | 3 | Pole and joints | R2, R7 | Assemble, measure from 300 below the cap to the ring centre; pack the sections | At least 4.0 m; longest piece under 1.6 m; joints have no play you can feel |
 | 4 | Release on a bench snag | R1, R3 | Ring on a rope hooked over a fixed log, crew rope at 30 N, pull up the pole on a spring balance | Rope lifts clear below the pin rating, or the pin breaks inside its band and the pole comes away cleanly |
-| 5 | Mass | R7 | Weigh the whole kit and the working tool | Recorded against R7 |
+| 5 | Mass | R7 | Weigh the kit carried to and from the canoe (without the crutch and the jigging weight), aluminium and bamboo | Recorded against R7 (4 kg) |
 | 6 | Float | R7, R8 | Hang the ring and cord on the winder in water | Floats |
 | 7 | Canoe heel | R3 | With the canoe moored in shallow, calm water, crew aboard in life jackets, pull the pole sideways from a fixed point ashore with a spring balance up to the pin rating; read the heel with an inclinometer | Heel at 347 N is 5 deg or less |
+| 8 | Hook head on a bench wrap | R1 | Rope wrapped once round a fixed log, crew rope at 30 N; work it back with the hook head, then lift with the ring | The wrap comes back half a turn below the pin rating, or the pin breaks inside its band |
+| 9 | Bamboo pole | R2, R7 | Bend-test every culm; assemble and repeat check 3 | Every culm sags 2.9 mm or less; reach and packed length as check 3 |
 
 ## 6. Safety stops
 
@@ -392,19 +418,19 @@ Work stops at each of these points and goes on only when everything listed is tr
 - **S1, before welding:** working in the open, nothing galvanised in the weld zone, eye and hand protection on.
 - **S2, before fitting any shear pin:** its reel has passed check 1; no other pin, nail, bolt or wire is in the kit.
 - **S3, before taking the kit onto a canoe:** checks 2 to 6 passed; the crutch is clamped and pulled by hand; every person has a life jacket on.
-- **S4, before the heel test (check 7) or any use on a snag:** the canoe is at least 7 m long with at least three crew, moored or in shallow, calm water; the operator kneels; the crew knows to slacken the line when the operator lifts and to cut the net if the canoe heels; nobody enters the water for any reason.
-- **S5, after every pin break:** the operator is back in a kneeling position, the ring is recovered on its tether, and a calibrated pin is fitted before the next try.
+- **S4, before the heel test (check 7) or any use on a snag:** the canoe is at least 7 m long with at least three crew (a smaller canoe class only once heel tests have set a pin for it), moored or in shallow, calm water; the operator kneels; the crew knows to slacken the line when the operator lifts and to cut the net if the canoe heels; nobody enters the water for any reason.
+- **S5, after every pin break:** the operator is back in a kneeling position, the ring or hook head is recovered on its tether, and a calibrated pin is fitted before the next try.
 
 ## 7. Tools, skills and workspace
 
-- Tools: hacksaw or cut-off grinder, bench drill or hand drill with a vee block, drills from 2.1 to 13, a vice, a 100 mm round former, files and a flap disc, stick welder, pop rivet gun, sharp knife, tape and square, spring balance to 50 kg, bubble inclinometer.
+- Tools: hacksaw or cut-off grinder, rasp and files for bamboo, a 5 kg weight for the bend test, bench drill or hand drill with a vee block, drills from 2.1 to 13, a vice, a 100 mm round former, files and a flap disc, stick welder, pop rivet gun, sharp knife, tape and square, spring balance to 50 kg, bubble inclinometer.
 - Skills: basic bending and welding of mild steel; drilling square through tube; tying a bowline.
 - Workspace: an open-air workshop bench; a galvaniser for the steel parts (sent out once all welding is done); a calm, shallow mooring for check 7.
 
 ## 8. Where the numbers come from
 
 - Model: `cad/src/model.py` (sizes, constructability checks), STEP files in `cad/step/`.
-- Drawings: `cad/drawings/SMR-DWG-001` (general arrangement) and `SMR-DWG-101` to `SMR-DWG-111` (making sketches).
+- Drawings: `cad/drawings/SMR-DWG-001` (general arrangement) and `SMR-DWG-101` to `SMR-DWG-112` (making sketches).
 - Calculations: `docs/04-calcs/01-sizing.md` (SMR-CAL-001), `docs/04-calcs/sizing.py` and `docs/04-calcs/results.csv`.
-- Bill of materials: `bom/bom.csv`; local production variant `bom/bom-local-variant.csv`.
+- Bill of materials: `bom/bom.csv`; bamboo local variant `bom/bom-bamboo-variant.csv`.
 - Pictures: `cad/src/build_plan_media.py`.

@@ -3,7 +3,7 @@
 Finished-product look for photoreal renders, built from the constructable model: every kit piece
 of cad/src/model.py is used as it is (rider ring with hinge bolt and gate pin, pole head, shear pin,
 pole sections, sleeves, rivets, lock pins, grip cap, tether, float winder, spare pin tube, jigging
-weight, gunwale crutch). Only the look is added, as recorded in docs/REVIEW.md: a plank deck under the
+weight, gunwale crutch, and the hook head of SMR-DDR-003). Only the look is added, as recorded in docs/REVIEW.md: a plank deck under the
 packed kit with a forearm and hand beside the ring for scale (hero), and a short net line draped over
 a branch for the detail view, with the pole cut short.
 APPEARANCE MODEL ONLY: no tolerances, no fabrication detail. CONCEPT, NOT FOR FABRICATION.
@@ -29,7 +29,7 @@ RENDER_VIEWS = [
     {"name": "hero", "groups": ["shell", "context"], "explode": False, "el": 38, "az": -62,
      "note": "Product render from the front right and above (about 38 deg elevation): the kit laid out as packed on a "
              "plank deck, three aluminium pole sections with their sleeves, the hinged rider ring, pole head, jigging "
-             "weight, clamp-on gunwale crutch with its roller, and the orange float winder with the tether; a forearm "
+             "weight, clamp-on gunwale crutch with its roller, the orange float winder with the tether, and the J-shaped hook head; a forearm "
              "and hand beside the ring for scale"},
     {"name": "exploded", "groups": ["end"], "explode": True, "el": 20, "az": -50,
      "note": "Exploded view of the working end from the front right and above (about 20 deg elevation): the two ring "
@@ -74,10 +74,10 @@ def product_parts(p=M.PARAMS):
     add("Rider ring, galvanised steel", L["ring"], C_STEEL, "metal", 1, "shell")
     add("Pole head, galvanised steel", L["head"], C_HEAD, "metal", 4, "shell")
     add("Jigging weight, galvanised steel", L["weight"], C_STEEL, "metal", 14, "shell")
-    add("Hook head, galvanised steel", L["hook"], C_STEEL, "metal", 21, "shell")
     add("Gunwale crutch, galvanised steel with HDPE roller", L["crutch"], C_STEEL, "metal", 15, "shell")
     add("Float winder, orange foam, with tether cord", L["winder"], C_FLOAT, "painted", 12, "shell")
     add("Spare pin tube", L["spares"], C_HDPE, "painted", 13, "shell")
+    add("Hook head, galvanised steel", L["hook"], C_STEEL, "metal", 21, "shell")
     add("Plank deck", Pos(720, -260, -15) * Box(1900, 1100, 30), C_DECK, "wood", None, "context")
     from context_parts import forearm_hand
     arm = Pos(240, -560, 22) * Rot(0, 0, 90) * forearm_hand(side="right", pose="flat")

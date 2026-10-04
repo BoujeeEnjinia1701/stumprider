@@ -33,12 +33,13 @@ def main():
     full = Rot(0, 90, 0) * Compound([t[k] for k in ("ring", "hinge", "gate", "head", "shear", "poles", "sleeves",
                                                      "rivets", "locks", "cap")])
     fv = project_views(full, work / "full")
+    hv = project_views(M.hook_head(P), work / "hook")
     s = Sheet(project="StumpRider", title="Canoe-worked gillnet release tool: general arrangement",
               dwg_no="SMR-DWG-001", rev="P3", author="Amish Chadha", date=DATE, scale=None,
               material="Kit per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
                          ("P2", "SMR-DDR-002: design for construction", DATE, "AC"),
-                         ("P3", "SMR-DDR-003: hook head; interim rule on the pole head", DATE, "AC")])
+                         ("P3", "SMR-DDR-003: hook head detail; bamboo variant note", DATE, "AC")])
     s.add_ortho(views)
     vb = _viewbox(Path(fv["front"]).read_text())
     vw, vh = vb[2] * FULL_K, vb[3] * FULL_K
@@ -49,6 +50,18 @@ def main():
         _t(x0 + vw / 2, y0 + vh + 10, "Scale 1:40; side elevation looking along +Y, ring on the left", 2.2, 400, MUTED, "middle"),
     ]
     s._dim(x0, y0 + vh, x0 + vw, y0 + vh, f"{vb[2] - 0.35:.0f}", "below", off=14)
+    hb = _viewbox(Path(hv["front"]).read_text())
+    hk = 1 / 5
+    hw, hh = hb[2] * hk, hb[3] * hk
+    hx, hy = 300.0, 66.0
+    s.add_svg(hv["front"], hx, hy, hw, hh, scale=hk)
+    s._layers += [
+        _t(hx + hw + 8, hy + 10, "DETAIL B: HOOK HEAD", 2.8, 600, INK, "start"),
+        _t(hx + hw + 8, hy + 14, "Scale 1:5; front view (along +Y)", 2.2, 400, MUTED, "start"),
+        _t(hx + hw + 8, hy + 19, "Pins into the pole head's fork in", 2.2, 400, MUTED, "start"),
+        _t(hx + hw + 8, hy + 23, "place of the ring, same shear pin", 2.2, 400, MUTED, "start"),
+    ]
+    s._dim(hx - 4, hy, hx - 4, hy + hh, f"{hb[3] - 0.35:.0f}", "left", off=4)
     s.add_notes("Main sizes (mm unless stated)", [
         f"Rider ring: 12 bar, {D['ring_ID']:.0f} inside, {D['ring_OD']:.0f} outside",
         "Two halves, 2 gap at each joint; hinge M8 (+Y), gate pin 8 (-Y)",
@@ -61,8 +74,9 @@ def main():
         "  38 x 2.8 x 200, two rivets below and a 6 pin above",
         f"Top hand to ring {D['hand_to_ring']:,.0f}; packed {D['packed_L']:,.0f}",
         "Pin rating 302 N nominal, 256 to 347 N band",
-        "Hook head (21) takes the ring's place in the fork: SMR-DWG-111",
-        "Pole head marked: only canoes 7 m or longer with 3 crew",
+        "Hook head: 6 x 28 x 60 flat, holes 10.5 and 2.1; 10 bar J,",
+        "  R30 bend, 50 clear throat (SMR-DWG-111)",
+        "Bamboo local variant: 36 culms, ferrules 40 x 1.5 x 160 (DWG-112)",
         "Third-angle; ring centre at the origin, pole on +X",
     ], x=276, y=118, width=146)
     out = s.save(ROOT / "cad" / "drawings" / "SMR-DWG-001")

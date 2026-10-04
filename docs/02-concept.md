@@ -24,7 +24,7 @@ revisions:
 - version: "0.4"
   date: '2026-10-03'
   author: Amish Chadha
-  change: Round 2 decisions (SMR-DDR-003); hook head, interim rule on the pole head, carried kit, local production variant; figures from SMR-CAL-001 v0.2
+  change: Amish's decisions of 2026-10-03 (SMR-DDR-003); hook head, small-canoe rule, carried kit, bamboo local variant; figures from SMR-CAL-001 v0.2
 ---
 
 # StumpRider design precis
@@ -64,6 +64,8 @@ The crew pulls the net line up over the gunwale crutch and holds it taut above t
 | 15 | Gunwale crutch frame | Steel saddle clamped on the gunwale, with cheeks for the roller | Made: bent, welded, galvanised |
 | 16 | Crutch roller and axle | HDPE roller on an M12 bolt; the net line runs over it | Made and bought |
 | 17 | Crutch clamp screw | M10 screw with a pad; clamps gunwales 30 to 60 mm thick | Made |
+| 21 | Hook head | 10 mm steel J hook on a flat that pins into the same fork; pulls a wrapped net back round the branch | Made: bent, welded, galvanised |
+| V1, V2 | Bamboo local variant pole | Three treated bamboo culms and two steel ferrules in place of lines 6, 7, 8 and 10 (`bom/bom-bamboo-variant.csv`) | Made |
 
 ## Key design choices
 
@@ -72,8 +74,10 @@ Each choice was made under Amish's 2026-10-03 pre-approval and is argued in SMR-
 - **A hinged ring, not a spring clip.** Two half rings on a hinge bolt, closed by a pinned gate. Nothing springs or corrodes shut, and the ring opens wide enough for any line from 4 to 16 mm.
 - **The shear pin is the only link between pole and ring.** The tang never reaches the end plate (45 mm clear), so push and pull both go through the pin, and twisting goes through the fork cheeks bearing on the tang, not the pin.
 - **One pin rating, set by the canoe.** 2.0 mm soft aluminium wire in double shear, 302 N nominal; the band allowed by R3 (256 to 347 N) is checked by breaking ten pins from each reel on CalRig before use.
-- **Aluminium pole for the prototype.** It is uniform, so the trials measure the tool and not a piece of bamboo. A local production variant with bamboo sections and a crutch and weight shared by five canoes is costed (`bom/bom-local-variant.csv`, about USD 56 a kit) and built alongside the prototype at TRL 4 (SMR-DDR-003).
-- **Hook head for wrapped nets.** A J hook on a flat that pins into the same fork with the same shear pin, to draw the bight of a wrapped net back round the branch; tried beside the ring at TRL 4 (SMR-DDR-003).
+- **Aluminium pole for the prototype, bamboo for local production.** The aluminium pole is uniform, so the trials measure the tool and not a piece of bamboo. Amish decided on 2026-10-03 (SMR-DDR-003) that a bamboo local variant, with one crutch and jigging weight shared by five canoes, is built alongside it so the two can be compared.
+- **A hook head for wrapped nets.** A J hook on a flat like the tang pins into the same fork with the same pin, so it adds a second way to unwind a wrap without adding pull on the canoe (SMR-DDR-003).
+- **Only canoes 7 m or longer with three crew.** The rule is kept; heel tests by canoe size class at TRL 4 set a pin for each class before a smaller class is served (SMR-DDR-003).
+- **Crutch on the canoe, weight at the landing.** The crutch stays clamped on as a fitting and the jigging weight is taken out only for deep sets, so less is carried (SMR-DDR-003).
 - **The jigging weight pins to the tang.** A weight loose on the cord would not move the ring; pinned on, it makes the ring heavy enough to jig on the tether.
 - **Clamp-on crutch.** It fits any gunwale from 30 to 60 mm thick without drilling the canoe.
 
@@ -87,15 +91,17 @@ All from SMR-CAL-001 (`docs/04-calcs/sizing.py`, results in `docs/04-calcs/resul
 | --- | --- | --- |
 | Shear pin rating | 302 N nominal (256 to 347 N) | Soft aluminium wire, 48 MPa in shear, double shear |
 | Pull to lift a hooked net | 81 to 126 N | Half a turn on the branch, friction 0.3 to 0.5, crew slackens to 30 N |
-| Pull to lift a net wrapped once round | 368 N to 2.3 kN | Same, one and a half turns: above the pin, so it must be worked round first, with the ring or the hook head |
+| Pull to lift a net wrapped once round | 368 N to 2.3 kN | Same, one and a half turns: above the pin, so it must be worked round first |
+| The same, worked back half a turn with the hook head | 162 to 493 N | One full turn left on the branch |
 | Design canoe heel when the pin breaks | 3.4 deg kneeling, 4.4 deg standing | 8 m plank canoe, three crew, 550 kg; pin at the top of its band |
-| Small dugout heel when the pin breaks | 24 deg kneeling | 5.5 m dugout, two crew, 280 kg |
+| Small dugout heel when the pin breaks | 24 deg kneeling | 5.5 m dugout, two crew, 280 kg; why canoes under 7 m are excluded |
 | Top hand to ring | 4.18 m | Hands 300 mm below the top of the pole |
 | Ring depth reached with the pole | 3.2 m | Pole 20 deg off vertical, operator kneeling |
 | Tether reach, jigging | 8 m | 10 m cord, 2 m kept above the water |
 | Pole buckling factor | 2.2 | Euler, 4.35 m, pinned ends, against 347 N |
-| Kit carried in the canoe | 4.22 kg with the hook head (working tool 3.7 kg) | Crutch left on the canoe, jigging weight at the landing |
-| Parts cost of one kit | USD 95.50 (local production variant USD 55.90) | Prototype prices, single kit |
+| Carried kit | 4.28 kg aluminium prototype; 3.89 kg bamboo local variant | Crutch on the canoe, weight at the landing; whole kit 6.78 kg |
+| Bamboo pole buckling factor | 1.5 | E 15 GPa; culms chosen by a bend test |
+| Parts cost of one kit | USD 95.50 aluminium prototype; USD 54.90 bamboo local variant | Prototype prices; variant with crutch and weight shared by five canoes |
 
 ## Patent design-arounds
 
@@ -114,7 +120,8 @@ From the preliminary patent, trademark and prior-art screen (not legal advice), 
 > **Safety:** These hazards apply to every use and every test of the tool.
 
 - **Nobody enters the water.** The tool is never a reason to keep children on boats; it is handed out only with child-protection work (SMR-DDR-001, D9).
-- **Capsize.** The pin limits the pull; in the design canoe it breaks at about 4 deg of heel. In a small dugout the same pin would let the canoe heel about 24 deg, so the interim rule, lettered on the pole head, keeps the tool to canoes of 7 m or longer with three crew. At TRL 4, heel tests by canoe class set a pin diameter per class; small canoes are served only once a measured pin suits them (SMR-DDR-003).
+- **Capsize.** The pin limits the pull; in the design canoe it breaks at about 4 deg of heel. In a small dugout the same pin would let the canoe heel about 24 deg, so the tool is used only from canoes 7 m or longer with at least three crew. Amish decided on 2026-10-03 to keep this rule and to set a pin per canoe class from heel tests at TRL 4.
+- **The hook head** is held by the same calibrated pin as the ring; it is used kneeling, with the crew's line slack, like the ring.
 - **Life jackets** are worn by every person on the canoe while a snag is worked.
 - **Use the rated pin only.** Never a nail, bolt or steel wire: a stronger pin removes the protection.
 - **Sudden release.** When the pin breaks the operator falls back into the canoe; kneel, never stand, and keep the other crew clear of the pole top.
@@ -124,4 +131,4 @@ This design is published as an open engineering reference. It is not certified e
 
 ## Open questions
 
-Open questions are kept in the design decisions register (SMR-DEC-001): Amish decided R1, R3, R7 and R10 on 2026-10-03 (SMR-DDR-003); the questions left open are R7 for the aluminium prototype and R9 at its limit, and the items to confirm when parts are bought.
+Open questions are kept in the design decisions register (SMR-DEC-001): R1, R3, R7 and R10 were decided by Amish on 2026-10-03; one new question on the aluminium prototype's carried mass is open, with the items to confirm when parts are bought.

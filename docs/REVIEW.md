@@ -1,65 +1,5 @@
 # Review note: StumpRider
 
-## Session 2026-10-03: round 2 requirement decisions applied
-
-Amish, 2026-10-03: "i approve all of the 47 recommendations provided by you. Execute them." For StumpRider that decides D-A1 to D-A4 of the TRL 3 session below as recommended: D-A1 B (hook head), D-A2 "A now, and C in the TRL 4 heel tests" (safety), D-A3 A and D-A4 C. D-A3 and D-A4 interact: the aluminium prototype stays the TRL 3 design, and the local production variant (bamboo plus sharing) is documented as a costed variant to be built alongside it at TRL 4. Recorded in `docs/decisions/0003-requirement-decisions-round2.md` (SMR-DDR-003) and under Decisions made in `docs/06-design-decisions.md` (SMR-DEC-001 v0.2). Phase cap TRL 3 kept: no test articles, test plans, firmware, build-log entries or purchasing lists. Not committed or pushed. This session sits at the top of the TRL 3 history; the earlier sessions follow in date order below.
-
-### What changed
-
-- **D-A1 B, R1: hook head.** `cad/src/model.py`: `hook_head()` (6 x 28 x 50 flat with the shear-pin and tether holes, J hook of 12 mm bar, 44 mm throat), BOM key `hook`, line 21 (USD 3, 0.19 kg); six new checks (no overlap in the fork, fork clearance, shear pin bearing, clear of the end plate, throat size): 86 of 86 pass. `cad/step/hook-head.step`; sketch SMR-DWG-111, joint 10, step 12 and the overview from `cad/src/build_plan_media.py`; build plan section 3.11 and step 12.
-- **D-A2 A now, C at TRL 4, R3 (safety).** The interim rule "ONLY CANOES 7 m OR LONGER WITH 3 CREW" is lettered on the pole head (BOM line 19, build plan 3.2 step 7, SMR-DWG-001 Rev P3 note). The sizing script now marks the small dugout and the light pin as not served under the rule. C is recorded as the planned TRL 4 step: heel tests by canoe class set a pin per class.
-- **D-A3 A, R7.** No part changes; the crutch is a fitting left clamped on the canoe and the jigging weight is kept at the landing. SMR-CAL-001 now reports the carried kit [M11].
-- **D-A4 C, R10.** New `bom/bom-local-variant.csv`: the same kit with bamboo sections and pinned steel ferrules, and one crutch and jigging weight (and their galvanising share) shared by five canoes. Costed at USD 55.90 a kit [C8]; the build plan has a short "Local production variant" section. Not modelled or drawn at TRL 3.
-- `docs/04-calcs/sizing.py` re-run: `results.csv`, `docs/04-calcs/01-sizing.md` (SMR-CAL-001 v0.2). `cad/src/concept_media.py` writes `media/model.glb` itself with `Compound([...])`, linear deflection 1.0 and angular 0.35 (the kit's `export_web_model` uses `Compound(children=...)`); `media/viewer.html` unchanged. `cad/src/product_model.py` adds the hook head to the packed kit.
-- Text: `docs/03-requirements.md` v0.4, `docs/02-concept.md` v0.4, `docs/05-build-plan.md` v0.2, `README.md`; `project.yaml` trl_evidence gains SMR-DDR-003 and the variant BOM.
-
-### Requirement status, before and after
-
-| ID | Before | After |
-| --- | --- | --- |
-| R1 | At risk (wrapped nets 368 N to 2.3 kN) | At risk; hook head added, pulls at most 347 N, tried at TRL 4 |
-| R3 | At risk (small dugout 24 deg) | Met on paper where the tool is allowed; canoes under 7 m or with fewer than three crew not served until the TRL 4 heel tests |
-| R7 | Not met, whole kit 6.5 kg | Not met by 0.22 kg: carried kit 4.22 kg with the hook head (4.02 kg without); local production variant 3.56 kg, met |
-| R9 | Met, 7.7 h | Met at the limit, 8.0 h |
-| R10 | Not met, USD 92.50 | Not met, USD 95.50 (prototype); USD 55.90 (local production variant) |
-
-R2, R4, R5, R6 and R8 unchanged.
-
-### Cost
-
-One kit USD 92.50 before, USD 95.50 after (hook head USD 3). Prototype run of three kits and calibration wire USD 284 before, USD 292.50 after, USD 1,707.50 under the USD 2,000 value-engineering target; `budget_usd` unchanged. Local production variant USD 55.90 a kit.
-
-### New questions for Amish
-
-Each is **Proposed, awaiting Amish**, listed in SMR-DEC-001 as O5 and O6.
-
-**O5. R7 for the aluminium prototype.**
-- State: the carried kit is 4.02 kg without the hook head and 4.22 kg with it, against "under 4 kg"; the local production variant carries 3.56 kg.
-- Option A: judge R7 on the local production variant and accept 4.22 kg for the aluminium prototype, whose job is to measure the tool. No change.
-- Option B: lighten the prototype: pole head socket of 38 x 2 tube 80 long (about 0.17 kg less) and the hook head carried only when wrapped nets are expected: 3.85 kg carried, 4.05 kg with the hook head.
-- Option C: restate R7 to 4.5 kg.
-- **Recommendation: A.** The variant meets R7 and is built at TRL 4 for exactly this comparison.
-
-**O6. R9 at its limit.**
-- State: with the hook head one smith needs about 8.0 h a kit (estimate), the whole of a working day.
-- Option A: accept and time it in the TRL 4 build trial.
-- Option B: have the HDPE roller turned and the clamp screw made by a supplier, saving about 30 min (estimate).
-- **Recommendation: A.** The times are estimates; the build trial gives the real figure.
-
-### Safety notes
-
-- D-A2 is a safety decision. The interim rule is now lettered on the pole head, beside "302 N PIN ONLY". The tool is not used from canoes under 7 m or with fewer than three crew until heel tests by canoe class have set a pin for them; no pin is chosen for small canoes on paper.
-- The hook head is fitted with the same calibrated shear pin, so it lets go at the same load as the ring; never fit it with a bolt or nail. Its point can catch netting or clothing: it is carried with the pole head off it, and the operator kneels and the crew slackens the line, as with the ring. Cutting the net stays the rule if the canoe heels.
-- Nobody enters the water, ever; the tool is handed out only with child-protection work.
-
-### Renders
-
-The photoreal renders made on Amish's Mac predate this session. The hero (packed kit) now has an eighteenth item, the hook head, beside the lock pin and spare tube, so it needs a re-render; the exploded and detail views of the working end are unchanged.
-
-### Recommended next step
-
-Amish decides O5 and O6. The design is then ready for TRL 4 once Amish chooses to start it: build one aluminium kit with its hook head and one local production variant, calibrate a wire reel on CalRig, run the bench and moored heel checks of SMR-BLD-001 section 5, the heel tests by canoe class, and the staged-snag trials with the ring and the hook head.
-
 ## Session 2026-09-30: scaffolded
 
 ### What was done
@@ -192,3 +132,69 @@ Amish decides D-A1 to D-A4. The design is then ready for TRL 4 once Amish choose
 ## 2026-10-03: photoreal renders
 
 Rendered with Blender Cycles on Amish's Mac from `cad/src/product_model.py`; captioned with `.kit/photo_caption.py`; `media/card.png` and `media/social-preview.png` made with `.kit/cards.py`. Views: hero, exploded, detail. image_qc passes and `render.py --check` has no FAIL.
+
+## 2026-10-03: Amish's requirement decisions carried out
+
+Amish said on 2026-10-03: "i agree with all the 46 recommendations you provided. please proceed." For StumpRider these are decisions 10B (R1), 11A then C (R3), 12A (R7) and 13C (R10), each as recommended under D-A1 to D-A4 above. Recorded in `docs/decisions/0003-requirement-decisions.md` (SMR-DDR-003). Not committed or pushed (batch run).
+
+### Changes
+
+- `cad/src/model.py`: hook head (BOM line 21): 6 x 28 x 60 flat with the tang's 10.5 and 2.1 mm holes and a 10 mm bar J (R30 bend, 50 mm clear throat), pinned into the same fork with the same shear pin; tether bowline moved across to it in use. Bamboo local variant pole: three 36 x 6 culms, bottom 120 mm dressed to 31.8 mm for the pole head, two 40 x 1.5 x 160 steel ferrules with M5 bolts, same lock pins. 144 of 144 constructability checks pass (64 new: hook head in the fork, pin bearing, cheeks clear, flat 45 mm clear of the plate, tether loop clear, throat; bamboo spigot seated, ferrule slide fit, bolts and pins through, culms butting, packed length; hook head clear of every part in the GA and packed layouts). STEP and STL regenerated, with new `hook-head.step`, `bamboo-pole-variant.step` and `hook-head.stl`.
+- `bom/bom.csv` line 21 (hook head, USD 3, price basis given) and new `bom/bom-bamboo-variant.csv` (culms USD 1 each, ferrules USD 2 each, price basis given). `budget_usd` unchanged.
+- `docs/04-calcs/sizing.py`, `01-sizing.md` v0.2 and `results.csv`: unwinding stages [F7, F8], hook head mass [M10], carried kits [M11, V3], bamboo pole [V1 to V10], new option figures [N1, N2]; old option figures O1 to O10 removed. Correction: lock pins, rivets and the weight pin had been left out of the masses (about 0.07 kg), because parts grouped inside a group read no volume.
+- `docs/03-requirements.md` v0.4: R3 restated (used only from canoes 7 m or longer with three crew; smaller classes once heel tests set a pin), R7 restated (mass carried to and from the canoe, crutch on the canoe, weight at the landing), R10 verified on the bamboo local variant; Amish quoted. `docs/02-concept.md` v0.4, README, `project.yaml` evidence.
+- `docs/05-build-plan.md` v0.2: Table 1 rows, sections 3.11 (hook head) and 3.12 (bamboo pole), Step 12 (hook head), Steps 10 and 11 (crutch stays on the canoe, weight at the landing), checks 8 and 9, S4 and S5.
+- Pictures: general arrangement SMR-DWG-001 Rev P3 (detail B, hook head, and note lines); new making sketches SMR-DWG-111 (hook head) and SMR-DWG-112 (bamboo culms and ferrule joint); overview regenerated with the hook head; new joint-10 (hook head in the fork), joint-11 (ferrule joint) and step-12; concept media regenerated (hero, exploded, cutaway, blueprint key figures, `model.glb`).
+- `docs/06-design-decisions.md` v0.2: O1 to O4 moved to Decisions made; new open decision O5; items to confirm 9 to 12; value engineering re-costed.
+- `cad/src/product_model.py`: the hook head in the packed kit of the hero view; scenes re-exported to `/home/claude/renders/stumprider`.
+
+### New results
+
+- R1: at risk. A wrap worked back half a turn by the hook head needs 162 to 493 N [F7, F8] (was 368 N to 2.3 kN); low friction comes inside the pin band after one half turn, high friction after two. The staged-snag trials decide.
+- R3: met on paper where the tool is allowed (3.4 deg kneeling, 4.4 deg standing in the design canoe); canoes under 7 m or with fewer than three crew excluded by the rule; pins per canoe class at TRL 4.
+- R7 (4 kg carried): bamboo local variant 3.89 kg, met; aluminium prototype 4.28 kg, not met (4.08 kg before the hook head; the 4.02 kg quoted in D-A3 was low by 0.07 kg). Packed length 1.55 m, met.
+- R9: about 8.1 h for one smith with the hook head (was 7.7 h), at risk by about 5 minutes against one day.
+- R10 (USD 40): bamboo local variant USD 54.90 a kit (USD 52.90 decided, plus the USD 3 hook head, less the USD 1 grip cap), aluminium prototype USD 95.50; not met at prototype prices.
+- Bamboo pole: buckling factor 1.49 at E 15 GPa, 1.0 at 10 GPa; culms accepted by a bend test (5 kg at the middle of a 1.4 m span sags 2.9 mm or less).
+- Mass: hook head 0.21 kg; whole kit 6.78 kg.
+- Value-engineering target: USD 2,000. Estimated cost of the constructable design: USD 299.50 for three aluminium kits, one bamboo pole set and calibration wire (USD 1,700.50 under the target).
+
+### For Amish
+
+**O5. R7 on the aluminium prototype (proposed, awaiting Amish).**
+- State: the aluminium prototype carries 4.28 kg, 0.28 kg over R7's 4 kg. The 4.02 kg of D-A3 was really 4.08 kg, and the hook head adds 0.21 kg. The bamboo local variant carries 3.89 kg and meets R7.
+- Option A: keep the 32 x 2 aluminium pole; judge R7 on the bamboo local variant and weigh the prototype at TRL 4. Cost USD 0.
+- Option B: 32 x 1.6 aluminium tube for the prototype pole. Carried 3.86 kg; buckling factor 1.84 instead of 2.2; cost about the same; the thinner wall dents more easily.
+- Option C: restate R7 to 4.3 kg.
+- **Recommendation: A**, so the prototype trials stay comparable with the calculation note and R7 is judged on the kit fishers would get.
+- The photoreal renders (`media/render-*.png`), card and social preview do not show the hook head yet; re-render on the Mac from the re-exported scenes.
+
+### Safety
+
+- The hook head is held by the same calibrated pin as the ring and is used under the same rules (kneel, slacken the line, cut rather than capsize, life jackets); it cannot heel the canoe more than the ring can.
+- The 7 m, three-crew rule stands; a smaller canoe class needs its own heel-tested pin first.
+- A bamboo culm softer than assumed bows before the pin breaks; this bends the pole but does not raise the load on the canoe. Culms are bend-tested before use.
+
+## 2026-10-04: Amish's requirement decisions carried out (round 3)
+
+Amish on 2026-10-04: "For round 3, I agree with all your proposed recommendations". For StumpRider this decides O5 of SMR-DEC-001 as recommended (2A). Recorded in `docs/decisions/0004-r7-prototype-mass.md` (SMR-DDR-004). Wording and records only; no geometry. Not committed or pushed.
+
+### Changes
+
+- `docs/03-requirements.md` v0.5: R7 judged on the bamboo local variant; Amish quoted.
+- `docs/04-calcs/01-sizing.md`: R7 notes and summary row updated.
+- `docs/06-design-decisions.md` v0.3: O5 moved to Decisions made; Open decisions now "None."
+- No model, BOM, drawing or media change was needed.
+
+### New results
+
+- R7: met on the bamboo local variant, 3.89 kg carried against 4 kg. The aluminium prototype's 4.28 kg is recorded, not a failure of R7; it is weighed at TRL 4.
+- Value-engineering target: USD 2,000. Estimated cost of the constructable design: USD 299.50 (USD 1,700.50 under the target). Unchanged.
+
+### For Amish
+
+Nothing new.
+
+## 2026-10-04: photoreal renders redone after the round-2 and round-3 decisions
+
+Views: hero, exploded, detail; cards regenerated; image_qc passes and `render.py --check` has no FAIL.

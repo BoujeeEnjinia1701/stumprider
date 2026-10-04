@@ -1,4 +1,4 @@
-"""StumpRider parametric model (build123d), TRL 3, constructable design (SMR-DDR-002).
+"""StumpRider parametric model (build123d), TRL 3, constructable design (SMR-DDR-002, SMR-DDR-003).
 
 Run from the repo root:  python cad/src/model.py [--check] [--export]
   --check   run the constructability checks (overlaps, contacts, clearances, pin paths)
@@ -35,15 +35,12 @@ Kit (BOM line numbers in brackets, see bom/bom.csv):
   [15] gunwale crutch frame: saddle and cheeks, 4 mm steel plate, welded
   [16] crutch roller, HDPE, with M12 axle bolt, washers and nyloc nut
   [17] crutch clamp screw: M10 T-handle screw, welded nut and pad
-  [21] hook head: a tang-sized flat with a bent 12 mm bar hook, pinned into the same fork with a
-       shear pin in place of the ring, to pull the bight of a wrapped net back round the branch
-       (SMR-DDR-003, decision D-A1 B)
+  [21] hook head: 10 mm steel bar hook on a 6 x 28 flat that pins into the same fork (SMR-DDR-003)
 
-Round 2 requirement decisions, 2026-10-03 (SMR-DDR-003, decided by Amish Chadha): hook head added
-(R1); interim rule on canoes printed on the pole head, per-class pins after the TRL 4 heel tests (R3);
-the aluminium prototype stays the TRL 3 design, the crutch stays clamped on the canoe and the jigging
-weight at the landing (R7); the bamboo and shared-crutch local production variant is costed in
-bom/bom-local-variant.csv, to be built beside the prototype at TRL 4 (R10).
+Bamboo local variant (SMR-DDR-003, bom/bom-bamboo-variant.csv): three treated bamboo culm sections,
+36 mm outside, in place of the aluminium sections [6], sleeves [7], rivets [8] and grip cap [10],
+joined by two steel ferrules 40 x 1.5 x 160 fixed with M5 bolts. The bottom 120 mm of the lowest
+culm is dressed to slide into the same pole head. Everything else is shared with the prototype kit.
 CONCEPT, NOT FOR FABRICATION.
 """
 import math
@@ -104,11 +101,19 @@ PARAMS = {
     "axle_z": 40.0,                        # axle height above the web top
     "clamp_z": -45.0,                      # clamp screw height
     "gunwale": (60.0, 40.0),               # design gunwale thickness range: max 60, min 30 (context 40)
-    # hook head (SMR-DDR-003): flat 28 x 6 from z0 to z1 (pinned in the fork like the tang, shear hole at the
-    # tang's shear-hole height, tether hole below it); 12 mm bar shank down the pole axis, J bend, tip up
-    "hook_flat_z": (30.0, 80.0),
-    "hook_tether_z": 44.0,
-    "hook": (12.0, 30.0, 28.0, 30.0),    # bar diameter, shank below the flat, bend radius, tip length
+    # hook head (SMR-DDR-003): pins into the pole head's fork in place of the ring's tang
+    "hook_flat_z": (20.0, 80.0),           # 6 x 28 flat, same width and thickness as the tang
+    "hook_tether_z": 32.0,                 # 10.5 mm tether hole (the tether's bowline is moved across)
+    "hook_bar_d": 10.0,
+    "hook_R": 30.0,                        # bend radius to the bar centre (throat 50 mm clear)
+    "hook_shank_z": -60.0,                 # bend centre height
+    "hook_tip_z": -25.0,                   # top of the tip leg
+    # bamboo local variant (SMR-DDR-003)
+    "culm": (36.0, 6.0),                   # bamboo culm outside diameter, wall (selected culms)
+    "spigot": (31.8, 120.0),               # bottom of the lowest culm dressed to this diameter and length
+    "ferrule": (40.0, 1.5, 160.0),         # steel tube OD, wall, length (37 inside)
+    "ferrule_bolt_down": 40.0,             # M5 bolt below the joint line
+    "ferrule_pin_up": 40.0,                # lock pin above the joint line
 }
 
 X_POLE = PARAMS["tang_x0"] + PARAMS["tang"][0] / 2      # 72: pole axis
@@ -232,24 +237,6 @@ def pole_head(p=PARAMS):
     return s + sock
 
 
-def hook_head(p=PARAMS):
-    """Hook head (SMR-DDR-003): a 6 mm flat the size of the tang, drilled for the shear pin at the same
-    height so it pins into the pole-head fork in place of the ring, and a J hook of 12 mm bar below it
-    whose throat opens upward, to catch the bight of a wrapped net and pull it back round the branch."""
-    tw, tt, _ = p["tang"]
-    z0, z1 = p["hook_flat_z"]
-    flat = Pos(X_POLE, 0, (z0 + z1) / 2) * Box(tw, tt, z1 - z0)
-    flat = flat - ycyl(p["shear_hole"][0] / 2, -10, 10, X_POLE, p["shear_hole"][1])
-    flat = flat - ycyl(p["tether_hole"][0] / 2, -10, 10, X_POLE, p["hook_tether_z"])
-    d, shank, R, tip = p["hook"]
-    zb = z0 - shank                                      # start of the bend
-    bar = zcyl(d / 2, zb, z0 + 0.5, X_POLE)
-    bend = Pos(X_POLE - R, 0, zb) * Rot(90, 0, 0) * Torus(R, d / 2)
-    bend = bend & Pos(X_POLE - R, 0, zb - R) * Box(4 * R, 4 * R, 2 * R)
-    bar = bar + bend + zcyl(d / 2, zb, zb + tip, X_POLE - 2 * R)
-    return flat + bar
-
-
 def shear_pin(p=PARAMS):
     _, z = p["shear_hole"]
     L = p["shear_len"]
@@ -333,14 +320,17 @@ def grip_cap(p=PARAMS):
 
 
 # ------------------------------------------------------------------ tether, float winder, spare pins
-def tether_knot(p=PARAMS):
+def tether_knot(p=PARAMS, z=None, tail=True):
     """Bowline loop through the tether hole and round the tang's outer edge, and the first 0.4 m of cord."""
-    _, z = p["tether_hole"]
+    if z is None:
+        _, z = p["tether_hole"]
     rc = p["cord_d"] / 2
     xe = p["tang_x0"] + p["tang"][0]                      # outer edge of the tang, 86
     cx = (X_POLE - 2 + xe + rc + 1.5) / 2
     Rl = (xe + rc + 1.5 - (X_POLE - 2)) / 2
     loop = Pos(cx, 0, z) * Torus(Rl, rc)
+    if not tail:
+        return loop
     tail = rod((xe + 4.5, 0, z + 2), (150, 0, 420), rc)
     return Compound([loop, tail])
 
@@ -448,6 +438,98 @@ def net_line(z0=-300.0, z1=1200.0, d=10.0):
     return zcyl(d / 2, z0, z1)
 
 
+# ------------------------------------------------------------------ hook head (SMR-DDR-003)
+def hook_head(p=PARAMS):
+    """A 6 x 28 flat like the tang, with tether and shear pin holes, and a 10 mm bar bent into a J
+    below it. Pins into the pole head's fork in place of the ring; pulls a wrapped bight back round
+    the branch. The J opens towards -X (towards the operator's side of the pole)."""
+    tw, tt, _ = p["tang"]
+    z0, z1 = p["hook_flat_z"]
+    flat = Pos(X_POLE, 0, (z0 + z1) / 2) * Box(tw, tt, z1 - z0)
+    rb = p["hook_bar_d"] / 2
+    R, zc, zt = p["hook_R"], p["hook_shank_z"], p["hook_tip_z"]
+    shank = zcyl(rb, zc, z0 + 10, X_POLE)                       # welded 10 mm up the flat's lower edge
+    big = 4 * R
+    bend = Pos(X_POLE - R, 0, zc) * Rot(90, 0, 0) * Torus(R, rb)
+    bend = bend & (Pos(X_POLE - R, 0, zc - big / 2) * Box(big, big, big))
+    tip = zcyl(rb, zc, zt, X_POLE - 2 * R)
+    h = flat + shank + bend + tip
+    h = h - ycyl(p["tether_hole"][0] / 2, -10, 10, X_POLE, p["hook_tether_z"])
+    h = h - ycyl(p["shear_hole"][0] / 2, -10, 10, X_POLE, p["shear_hole"][1])
+    return h
+
+
+def hook_knot(p=PARAMS):
+    """The tether's bowline moved to the hook head's tether hole (loop only)."""
+    return tether_knot(p, z=p["hook_tether_z"], tail=False)
+
+
+def hook_throat(p=PARAMS):
+    """Clear opening of the J between the shank and the tip."""
+    return 2 * p["hook_R"] - p["hook_bar_d"]
+
+
+# ------------------------------------------------------------------ bamboo local variant (SMR-DDR-003)
+def bamboo_sections(p=PARAMS):
+    d = derived(p)
+    od, wall = p["culm"]
+    ri = od / 2 - wall
+    sd, sl = p["spigot"]
+    out = []
+    z = d["pole_z0"]
+    for i in range(p["n_sections"]):
+        if i == 0:
+            s = ztube(sd / 2, ri, z, z + sl, X_POLE) + ztube(od / 2, ri, z + sl, z + p["section_L"], X_POLE)
+            s = s - ycyl(p["lock_d"] / 2 + 0.25, -30, 30, X_POLE, z + p["head_pin_up"])
+        else:
+            s = ztube(od / 2, ri, z, z + p["section_L"], X_POLE)
+            s = s - ycyl(p["lock_d"] / 2 + 0.25, -30, 30, X_POLE, z + p["ferrule_pin_up"])
+        if i < p["n_sections"] - 1:
+            s = s - ycyl(2.65, -30, 30, X_POLE, z + p["section_L"] - p["ferrule_bolt_down"])
+        out.append(s)
+        z += p["section_L"]
+    return out
+
+
+def ferrules(p=PARAMS):
+    d = derived(p)
+    od, wall, L = p["ferrule"]
+    out = []
+    for jz in d["joints"]:
+        s = ztube(od / 2, od / 2 - wall, jz - L / 2, jz + L / 2, X_POLE)
+        s = s - ycyl(2.65, -30, 30, X_POLE, jz - p["ferrule_bolt_down"])
+        s = s - ycyl(p["lock_d"] / 2 + 0.25, -30, 30, X_POLE, jz + p["ferrule_pin_up"])
+        out.append(s)
+    return out
+
+
+def ferrule_bolts(p=PARAMS):
+    """M5 stainless bolt and nyloc nut through ferrule and culm (set in epoxy)."""
+    d = derived(p)
+    ro = p["ferrule"][0] / 2
+    out = []
+    for jz in d["joints"]:
+        z = jz - p["ferrule_bolt_down"]
+        shank = ycyl(2.5, -ro - 0.5, ro + 6, X_POLE, z)
+        head = ycyl(4.25, -ro - 4.0, -ro, X_POLE, z)
+        nut = ycyl(4.25, ro, ro + 5, X_POLE, z) - ycyl(2.5, ro - 1, ro + 6, X_POLE, z)
+        out.append(Compound([shank, head, nut]))
+    return out
+
+
+def bamboo_lock_pins(p=PARAMS):
+    d = derived(p)
+    half = p["ferrule"][0] / 2 + 0.5
+    pins = [clevis(d["pole_z0"] + p["head_pin_up"], p)]
+    pins += [clevis(jz + p["ferrule_pin_up"], p, half=half) for jz in d["joints"]]
+    return pins
+
+
+def bamboo_pole(p=PARAMS):
+    """The bamboo variant's pole as one compound (sections, ferrules, bolts, lock pins)."""
+    return Compound(bamboo_sections(p) + ferrules(p) + ferrule_bolts(p) + bamboo_lock_pins(p))
+
+
 # ------------------------------------------------------------------ assemblies
 BOM = {  # key: (BOM line, name)
     "ring": (1, "Rider ring (two halves, tang)"),
@@ -467,13 +549,13 @@ BOM = {  # key: (BOM line, name)
     "cframe": (15, "Gunwale crutch frame"),
     "roller": (16, "Crutch roller and axle"),
     "clamp": (17, "Crutch clamp screw"),
-    "hook": (21, "Hook head (pins into the fork in place of the ring)"),
+    "hook": (21, "Hook head"),
 }
 
 CRUTCH_AT = (420.0, 0.0, 0.0)       # where the crutch, winder and weight sit beside the tool in the GA
 WINDER_AT = (420.0, 0.0, 300.0)
 WEIGHT_AT = (300.0, 0.0, 0.0)
-HOOK_AT = (190.0, 0.0, 0.0)          # hook head stands beside the tool in the GA, flat up
+HOOK_AT = (190.0, 0.0, 95.0)
 
 
 def tool_parts(p=PARAMS):
@@ -560,7 +642,7 @@ def packed_layout(p=PARAMS):
     w = float_winder(p)
     out["winder"] = Pos(1330, -200, p["winder"][2] / 2 + 12) * Compound([w, winder_cord(p)])
     out["spares"] = Pos(1180, -330, 7) * Rot(0, 90, 0) * spare_tube(p)
-    out["hook"] = Pos(640, -340, p["hook"][0] / 2) * Rot(90, 0, 0) * Pos(-X_POLE, 0, 0) * hook_head(p)
+    out["hook"] = Pos(620, -330, p["tang"][1] / 2) * Rot(90, 0, 0) * Pos(-X_POLE, 0, 0) * hook_head(p)
     return out
 
 
@@ -665,15 +747,41 @@ def checks(p=PARAMS):
     touches("weight pin bears in the tang hole", wp, A, 0.3)
     # hook head in the fork (SMR-DDR-003)
     hk = hook_head(p)
+    hkn = hook_knot(p)
     no_overlap("hook head / pole head", hk, head)
-    clear("fork cheeks clear the hook head flat (free to swing)", head, hk, 0.9)
+    clear("fork cheeks clear the hook head's flat faces (free to swing)", head, hk, 0.9)
     no_overlap("shear pin / hook head", sp, hk)
-    touches("shear pin bears in the hook head hole", sp, hk, 0.1)
-    gap_hk = p["cheek_z"][1] - p["hook_flat_z"][1]
-    r.append(("hook head top stays clear of the end plate, so push and pull go through the pin",
-              gap_hk >= 20, f"{gap_hk:.0f} mm"))
-    throat = 2 * p["hook"][2] - p["hook"][0]
-    r.append(("hook throat takes a doubled 16 mm headrope", throat >= 2 * 16 + 8, f"{throat:.0f} mm"))
+    touches("shear pin bears in the hook head's hole", sp, hk, 0.1)
+    hgap = p["cheek_z"][1] - p["hook_flat_z"][1]
+    r.append(("hook head's flat stops clear of the end plate, so push and pull go through the pin",
+              hgap >= 20, f"{hgap:.0f} mm"))
+    no_overlap("tether loop / hook head", hkn, hk)
+    clear("tether loop on the hook head clears the fork cheeks", hkn, head, 2.0)
+    r.append(("hook throat takes a doubled 16 mm line with room to spare",
+              hook_throat(p) >= 40, f"{hook_throat(p):.0f} mm clear"))
+    clear("hook tip clears the pole head (bight can enter the J)", Pos(0, 0, 0) * zcyl(p["hook_bar_d"] / 2, p["hook_shank_z"], p["hook_tip_z"], X_POLE - 2 * p["hook_R"]), head, 50.0)
+    # bamboo local variant (SMR-DDR-003)
+    bs, fe, fb, bl = bamboo_sections(p), ferrules(p), ferrule_bolts(p), bamboo_lock_pins(p)
+    no_overlap("bamboo spigot / head socket", bs[0], head)
+    touches("bamboo spigot seats on the end plate", bs[0], head, 0.05)
+    no_overlap("head lock pin / bamboo spigot", bl[0], bs[0])
+    touches("head lock pin through the bamboo spigot", bl[0], bs[0], 0.3)
+    for i, s in enumerate(fe):
+        no_overlap(f"ferrule {i + 1} / lower culm", s, bs[i])
+        no_overlap(f"ferrule {i + 1} / upper culm", s, bs[i + 1])
+        clear(f"ferrule {i + 1} slide fit on the upper culm", s, bs[i + 1], 0.15)
+        no_overlap(f"ferrule bolt {i + 1} / ferrule", fb[i], s)
+        no_overlap(f"ferrule bolt {i + 1} / lower culm", fb[i], bs[i])
+        touches(f"ferrule bolt {i + 1} through the ferrule", fb[i], s, 0.3)
+        touches(f"ferrule bolt {i + 1} through the lower culm", fb[i], bs[i], 0.3)
+        no_overlap(f"bamboo lock pin {i + 1} / ferrule", bl[i + 1], s)
+        no_overlap(f"bamboo lock pin {i + 1} / upper culm", bl[i + 1], bs[i + 1])
+        touches(f"bamboo lock pin {i + 1} through the upper culm", bl[i + 1], bs[i + 1], 0.6)
+    for i in range(len(bs) - 1):
+        d_ = _dist(bs[i], bs[i + 1])
+        r.append((f"culms {i + 1} and {i + 2} butt inside the ferrule", d_ < 0.05, f"gap {d_:.2f} mm"))
+    bpl = p["section_L"] + p["ferrule"][2] / 2
+    r.append(("longest packed bamboo piece (a culm with its ferrule)", bpl <= 1600, f"{bpl:.0f} mm"))
     # crutch
     no_overlap("roller / frame", rol, fr)
     no_overlap("washers / frame", wash, fr)
@@ -696,6 +804,15 @@ def checks(p=PARAMS):
     # packing
     d = derived(p)
     r.append(("longest packed piece (a section with its sleeve)", d["packed_L"] <= 1600, f"{d['packed_L']:.0f} mm"))
+    # kit in its GA and packed layouts
+    c = build_components(p)
+    for k in BOM:
+        if k != "hook":
+            no_overlap(f"GA layout: hook head / {BOM[k][1].lower()}", c["hook"], c[k])
+    L = packed_layout(p)
+    for k, v in L.items():
+        if k != "hook":
+            no_overlap(f"packed: hook head / {k}", L["hook"], v)
     return r
 
 
@@ -716,12 +833,14 @@ def export(p=PARAMS):
     export_step(pole_sections(p)[0], str(step / "pole-section.step"))
     export_step(sleeves(p)[0], str(step / "joint-sleeve.step"))
     export_step(hook_head(p), str(step / "hook-head.step"))
+    export_step(bamboo_pole(p), str(step / "bamboo-pole-variant.step"))
     kw = dict(tolerance=0.2, angular_tolerance=0.3)
     export_stl(crutch_roller(p)[0], str(stl / "crutch-roller.stl"), **kw)
     export_stl(float_winder(p), str(stl / "float-winder.stl"), **kw)
     export_stl(ring_half(p, +1), str(stl / "ring-fixed-half.stl"), **kw)
     export_stl(ring_half(p, -1), str(stl / "ring-swinging-half.stl"), **kw)
     export_stl(pole_head(p), str(stl / "pole-head.stl"), **kw)
+    export_stl(hook_head(p), str(stl / "hook-head.stl"), **kw)
 
 
 if __name__ == "__main__":
