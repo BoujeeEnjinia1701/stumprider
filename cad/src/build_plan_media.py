@@ -4,7 +4,7 @@ Run from the repo root:  python cad/src/build_plan_media.py [overview|sheets|joi
 With no argument it draws everything. Every picture is drawn from cad/src/model.py, so the
 pictures and the model never disagree:
     docs/05-build-plan/overview.png    every component, laid out as packed, numbered in build order
-    cad/drawings/SMR-DWG-101 to 110    making sketches for the made components
+    cad/drawings/SMR-DWG-101 to 111    making sketches for the made components (111: hook head, SMR-DDR-003)
     docs/05-build-plan/joint-NN.png    close-ups of the joints that need explaining
     docs/05-build-plan/step-NN.png     one picture per assembly step
 Uses .kit/build_views.py. BUILD PLAN ILLUSTRATION, PLAN NOT YET BUILT.
@@ -31,7 +31,8 @@ J1 = D["joints"][0]
 COL = {"ring": "#B45309", "ring2": "#D97706", "hinge": "#6B7280", "gate": "#9CA3AF", "head": "#0F766E",
        "shear": "#DC2626", "pole": "#94A3B8", "sleeve": "#475569", "rivet": "#374151", "lock": "#6B7280",
        "cap": "#111827", "tether": "#EA580C", "winder": "#F97316", "spares": "#A3A3A3", "weight": "#78350F",
-       "cframe": "#1D4ED8", "roller": "#A8A29E", "clamp": "#4B5563", "line": "#D6D3D1", "gunwale": "#D6D3D1"}
+       "cframe": "#1D4ED8", "roller": "#A8A29E", "clamp": "#4B5563", "line": "#D6D3D1", "gunwale": "#D6D3D1",
+       "hook": "#7C2D12"}
 
 
 def win(xc, yc, zc, sx, sy, sz):
@@ -79,6 +80,7 @@ def overview():
         Part("Gunwale crutch frame", cpos * cr["frame"], COL["cframe"], 15, (0, -150, 0)),
         Part("Crutch roller, washers and axle", cpos * Compound([cr["roller"], cr["washers"], cr["axle"]]), COL["roller"], 16, (0, -130, 90)),
         Part("Crutch clamp screw with pad", cpos * cr["clamp"], COL["clamp"], 17, (0, -300, 0)),
+        Part("Hook head", L["hook"], COL["hook"], 21, (0, -120, 0)),
     ]
     _ = lk
     bv.overview(parts, OUT / "overview.png", "StumpRider: the kit, in build order",
@@ -222,6 +224,21 @@ def sheets():
                         "Fits gunwales 30 to 60 thick: tighten by hand only.",
                         "Check: pad bears flat on the gunwale side."],
                        DATE, inset_view=(24, -40))
+    hk = Pos(-XP, 0, 0) * M.hook_head(P)
+    bv.component_sheet(Part("Hook head", hk, COL["hook"]),
+                       [Part("Pole head and shear pin", Pos(-XP, 0, 0) * Compound([t["head"], t["shear"]]), "#D1D5DB")],
+                       "StumpRider", "SMR-DWG-111", "Hook head (SMR-DDR-003)", "6 mm flat bar; 12 mm mild steel round bar",
+                       ["Flat: 6 x 28 x 50 flat bar; drill 2.1 for the shear",
+                        "  pin 10 from the top and 10.5 for the tether 26 below.",
+                        "Hook: about 150 of 12 bar; bend a J over a 56 mm",
+                        "  former, 30 straight below the flat, tip 30 long;",
+                        "  throat 44 inside, opening upward.",
+                        "Weld the shank square under the flat, on its centre line.",
+                        "Galvanise with the ring. Mass about 0.19 kg.",
+                        "Fit: in the fork in place of the ring, same shear pin.",
+                        "Check: swings freely in the fork; a 16 mm rope doubled",
+                        "  drops into the throat."],
+                       DATE, inset_view=(24, -50))
 
 
 # ------------------------------------------------------------------ joints
@@ -287,6 +304,12 @@ def joints():
              OUT / "joint-09.png", "Joint 9: roller on its axle, cut",
              "2 mm washer each side; nyloc nut snug so the roller spins and the cheeks are not pulled in",
              cut="+Y", elev=14, azim=-80)
+    w = win(XP, 0, 80, 120, 90, 260)
+    bv.joint([Part("Hook head", M.hook_head(P), COL["hook"]), Part("Pole head (fork)", t["head"] & w, COL["head"]),
+              Part("Shear pin 2 mm", t["shear"], COL["shear"])],
+             OUT / "joint-10.png", "Joint 10: hook head in the fork (SMR-DDR-003)",
+             "Ring off; the hook head's flat goes between the fork cheeks and takes the same shear pin",
+             elev=18, azim=-40)
 
 
 # ------------------------------------------------------------------ steps
@@ -350,6 +373,12 @@ def steps():
     bv.step(ring_done + [Part("Tether", t["tether"] & win(100, 0, 60, 200, 200, 200), "#D1D5DB")], [wt, wp], OUT / "step-11.png",
             "Step 11: for deep snags, pin the jigging weight to the tang",
             "Pole head off first; weight cheeks over the tang, lock pin through the middle hole", elev=18, azim=-50)
+    hkp = Part("Hook head", M.hook_head(P), COL["hook"])
+    pole_on = Part("Pole with head", end, COL["head"], None, (0, 0, 120))
+    sh2 = Part("Shear pin", t["shear"], COL["shear"], None, (0, -60, 0))
+    bv.step([hkp], [pole_on, sh2], OUT / "step-12.png", "Step 12: for a wrapped net, put the fork on the hook head",
+            "Ring off the pole first; same shear pin, ends bent over; draw the bight back round the branch half a turn at a time",
+            elev=18, azim=-50)
     _ = seq
 
 

@@ -35,6 +35,15 @@ Kit (BOM line numbers in brackets, see bom/bom.csv):
   [15] gunwale crutch frame: saddle and cheeks, 4 mm steel plate, welded
   [16] crutch roller, HDPE, with M12 axle bolt, washers and nyloc nut
   [17] crutch clamp screw: M10 T-handle screw, welded nut and pad
+  [21] hook head: a tang-sized flat with a bent 12 mm bar hook, pinned into the same fork with a
+       shear pin in place of the ring, to pull the bight of a wrapped net back round the branch
+       (SMR-DDR-003, decision D-A1 B)
+
+Round 2 requirement decisions, 2026-10-03 (SMR-DDR-003, decided by Amish Chadha): hook head added
+(R1); interim rule on canoes printed on the pole head, per-class pins after the TRL 4 heel tests (R3);
+the aluminium prototype stays the TRL 3 design, the crutch stays clamped on the canoe and the jigging
+weight at the landing (R7); the bamboo and shared-crutch local production variant is costed in
+bom/bom-local-variant.csv, to be built beside the prototype at TRL 4 (R10).
 CONCEPT, NOT FOR FABRICATION.
 """
 import math
@@ -95,6 +104,11 @@ PARAMS = {
     "axle_z": 40.0,                        # axle height above the web top
     "clamp_z": -45.0,                      # clamp screw height
     "gunwale": (60.0, 40.0),               # design gunwale thickness range: max 60, min 30 (context 40)
+    # hook head (SMR-DDR-003): flat 28 x 6 from z0 to z1 (pinned in the fork like the tang, shear hole at the
+    # tang's shear-hole height, tether hole below it); 12 mm bar shank down the pole axis, J bend, tip up
+    "hook_flat_z": (30.0, 80.0),
+    "hook_tether_z": 44.0,
+    "hook": (12.0, 30.0, 28.0, 30.0),    # bar diameter, shank below the flat, bend radius, tip length
 }
 
 X_POLE = PARAMS["tang_x0"] + PARAMS["tang"][0] / 2      # 72: pole axis
@@ -216,6 +230,24 @@ def pole_head(p=PARAMS):
     for c in cheeks:
         s = s + c
     return s + sock
+
+
+def hook_head(p=PARAMS):
+    """Hook head (SMR-DDR-003): a 6 mm flat the size of the tang, drilled for the shear pin at the same
+    height so it pins into the pole-head fork in place of the ring, and a J hook of 12 mm bar below it
+    whose throat opens upward, to catch the bight of a wrapped net and pull it back round the branch."""
+    tw, tt, _ = p["tang"]
+    z0, z1 = p["hook_flat_z"]
+    flat = Pos(X_POLE, 0, (z0 + z1) / 2) * Box(tw, tt, z1 - z0)
+    flat = flat - ycyl(p["shear_hole"][0] / 2, -10, 10, X_POLE, p["shear_hole"][1])
+    flat = flat - ycyl(p["tether_hole"][0] / 2, -10, 10, X_POLE, p["hook_tether_z"])
+    d, shank, R, tip = p["hook"]
+    zb = z0 - shank                                      # start of the bend
+    bar = zcyl(d / 2, zb, z0 + 0.5, X_POLE)
+    bend = Pos(X_POLE - R, 0, zb) * Rot(90, 0, 0) * Torus(R, d / 2)
+    bend = bend & Pos(X_POLE - R, 0, zb - R) * Box(4 * R, 4 * R, 2 * R)
+    bar = bar + bend + zcyl(d / 2, zb, zb + tip, X_POLE - 2 * R)
+    return flat + bar
 
 
 def shear_pin(p=PARAMS):
@@ -435,11 +467,13 @@ BOM = {  # key: (BOM line, name)
     "cframe": (15, "Gunwale crutch frame"),
     "roller": (16, "Crutch roller and axle"),
     "clamp": (17, "Crutch clamp screw"),
+    "hook": (21, "Hook head (pins into the fork in place of the ring)"),
 }
 
 CRUTCH_AT = (420.0, 0.0, 0.0)       # where the crutch, winder and weight sit beside the tool in the GA
 WINDER_AT = (420.0, 0.0, 300.0)
 WEIGHT_AT = (300.0, 0.0, 0.0)
+HOOK_AT = (190.0, 0.0, 0.0)          # hook head stands beside the tool in the GA, flat up
 
 
 def tool_parts(p=PARAMS):
@@ -479,6 +513,8 @@ def build_components(p=PARAMS):
     c["spares"] = Pos(x + 50, 70, z - 40) * spare_tube(p)
     wx, wy, wz = WEIGHT_AT
     c["weight"] = Pos(wx - X_POLE, wy, wz) * Compound([jig_weight(p), weight_pin(p)])
+    hx, hy, hz = HOOK_AT
+    c["hook"] = Pos(hx - X_POLE, hy, hz) * hook_head(p)
     return c
 
 
@@ -524,6 +560,7 @@ def packed_layout(p=PARAMS):
     w = float_winder(p)
     out["winder"] = Pos(1330, -200, p["winder"][2] / 2 + 12) * Compound([w, winder_cord(p)])
     out["spares"] = Pos(1180, -330, 7) * Rot(0, 90, 0) * spare_tube(p)
+    out["hook"] = Pos(640, -340, p["hook"][0] / 2) * Rot(90, 0, 0) * Pos(-X_POLE, 0, 0) * hook_head(p)
     return out
 
 
@@ -626,6 +663,17 @@ def checks(p=PARAMS):
     no_overlap("weight pin / weight", wp, wt)
     no_overlap("weight / tether loop", wt, knot)
     touches("weight pin bears in the tang hole", wp, A, 0.3)
+    # hook head in the fork (SMR-DDR-003)
+    hk = hook_head(p)
+    no_overlap("hook head / pole head", hk, head)
+    clear("fork cheeks clear the hook head flat (free to swing)", head, hk, 0.9)
+    no_overlap("shear pin / hook head", sp, hk)
+    touches("shear pin bears in the hook head hole", sp, hk, 0.1)
+    gap_hk = p["cheek_z"][1] - p["hook_flat_z"][1]
+    r.append(("hook head top stays clear of the end plate, so push and pull go through the pin",
+              gap_hk >= 20, f"{gap_hk:.0f} mm"))
+    throat = 2 * p["hook"][2] - p["hook"][0]
+    r.append(("hook throat takes a doubled 16 mm headrope", throat >= 2 * 16 + 8, f"{throat:.0f} mm"))
     # crutch
     no_overlap("roller / frame", rol, fr)
     no_overlap("washers / frame", wash, fr)
@@ -667,6 +715,7 @@ def export(p=PARAMS):
     export_step(float_winder(p), str(step / "float-winder.step"))
     export_step(pole_sections(p)[0], str(step / "pole-section.step"))
     export_step(sleeves(p)[0], str(step / "joint-sleeve.step"))
+    export_step(hook_head(p), str(step / "hook-head.step"))
     kw = dict(tolerance=0.2, angular_tolerance=0.3)
     export_stl(crutch_roller(p)[0], str(stl / "crutch-roller.stl"), **kw)
     export_stl(float_winder(p), str(stl / "float-winder.stl"), **kw)

@@ -4,7 +4,7 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/stumprider/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/stumprider/actions/workflows/reuse.yml)
 
-**Area:** Food and water security · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** USD 2,000 for the prototype work (estimated cost of the constructable design USD 284 for three kits) · **Difficulty:** 2 of 5
+**Area:** Food and water security · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** USD 2,000 for the prototype work (estimated cost of the constructable design USD 292.50 for three kits) · **Difficulty:** 2 of 5
 
 Frees gillnets snagged on submerged trees from the canoe so children are not sent to dive.
 
@@ -87,7 +87,7 @@ The [prototype build plan](docs/05-build-plan.md) (SMR-BLD-001, plan, not yet bu
 >
 > Stop and cut the net rather than risk a capsize.
 >
-> The shear pin protects a canoe of about 8 m with three crew; it does not protect small dugouts. Until heel tests show otherwise, the tool is not used from canoes under 7 m or with fewer than three crew, and the operator kneels.
+> The shear pin protects a canoe of about 8 m with three crew; it does not protect small dugouts. The interim rule is lettered on the pole head: the tool is used only from canoes of 7 m or longer with three crew until heel tests by canoe class set a pin for smaller canoes, and the operator kneels.
 >
 > This design is published as an open engineering reference. It is not certified equipment.
 

@@ -10,7 +10,6 @@ energy or material. Figures on the sheet come from docs/04-calcs/results.csv (SM
 CONCEPT, NOT FOR FABRICATION.
 """
 import csv
-import functools
 import shutil
 import sys
 from pathlib import Path
@@ -30,7 +29,7 @@ TITLE = "Canoe-worked release tool for gillnets snagged on drowned trees"
 COLORS = {"ring": "#B45309", "hinge": "#6B7280", "gate": "#9CA3AF", "head": "#0F766E", "shear": "#DC2626",
           "poles": "#94A3B8", "sleeves": "#475569", "rivets": "#374151", "locks": "#6B7280", "cap": "#111827",
           "tether": "#EA580C", "winder": "#F97316", "spares": "#E5E7EB", "weight": "#78350F",
-          "cframe": "#1D4ED8", "roller": "#F5F5F4", "clamp": "#4B5563"}
+          "cframe": "#1D4ED8", "roller": "#F5F5F4", "clamp": "#4B5563", "hook": "#7C2D12"}
 LINE = "#A8A29E"
 
 
@@ -78,14 +77,19 @@ def cutaway():
 
 
 def web():
-    """Coarse glTF tessellation (1 mm chord, 0.35 rad) keeps media/model.glb a few MB."""
-    import build123d as bd
-    orig = bd.export_gltf
-    bd.export_gltf = functools.partial(orig, linear_deflection=1.0, angular_deflection=0.35)
-    try:
-        return K.export_web_model(kit_parts(), "media", title=f"{PROJECT}: {TITLE}")
-    finally:
-        bd.export_gltf = orig
+    """Coarse glTF tessellation (1 mm chord, 0.35 rad) keeps media/model.glb a few MB. Built here with
+    Compound([...]) rather than the kit's export_web_model; media/viewer.html is unchanged."""
+    from build123d import Color, export_gltf
+    import matplotlib.colors as mc
+    kids = []
+    for q in kit_parts():
+        sh = q.shape
+        sh.color = Color(*mc.to_rgb(q.color))
+        sh.label = q.name
+        kids.append(sh)
+    out = ROOT / "media" / "model.glb"
+    export_gltf(Compound(kids), str(out), binary=True, linear_deflection=1.0, angular_deflection=0.35)
+    return out
 
 
 def main():
@@ -101,7 +105,8 @@ def main():
             f"Shear pin 2 mm soft aluminium, {r('P1'):.0f} N nominal ({r('P2'):.0f} to {r('P3'):.0f} N)",
             f"Design canoe heels {r('H5'):.1f} deg (kneeling) when the pin breaks",
             f"Jigging weight {r('M4'):.1f} kg and {P['cord_L'] / 1000:.0f} m tether for snags to {r('R3'):.0f} m",
-            f"Kit {r('M8'):.1f} kg, about USD {r('C1'):.0f}; never a reason to send anyone into the water",
+            f"Hook head for wrapped nets; carried kit {r('M11'):.2f} kg; about USD {r('C1'):.0f} a kit",
+            "Only canoes 7 m or longer with 3 crew; never a reason to send anyone into the water",
         ],
         scale_figure=True, web_model=False, cut=False,
     )

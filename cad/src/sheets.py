@@ -1,4 +1,4 @@
-"""StumpRider general arrangement sheet SMR-DWG-001, Rev P2 (TRL 3; SMR-DDR-002 applied).
+"""StumpRider general arrangement sheet SMR-DWG-001, Rev P3 (TRL 3; SMR-DDR-002 and SMR-DDR-003 applied).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/SMR-DWG-001.svg, .pdf and .png from the parametric model in cad/src/model.py
@@ -34,10 +34,11 @@ def main():
                                                      "rivets", "locks", "cap")])
     fv = project_views(full, work / "full")
     s = Sheet(project="StumpRider", title="Canoe-worked gillnet release tool: general arrangement",
-              dwg_no="SMR-DWG-001", rev="P2", author="Amish Chadha", date=DATE, scale=None,
+              dwg_no="SMR-DWG-001", rev="P3", author="Amish Chadha", date=DATE, scale=None,
               material="Kit per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
-                         ("P2", "SMR-DDR-002: design for construction", DATE, "AC")])
+                         ("P2", "SMR-DDR-002: design for construction", DATE, "AC"),
+                         ("P3", "SMR-DDR-003: hook head; interim rule on the pole head", DATE, "AC")])
     s.add_ortho(views)
     vb = _viewbox(Path(fv["front"]).read_text())
     vw, vh = vb[2] * FULL_K, vb[3] * FULL_K
@@ -60,6 +61,8 @@ def main():
         "  38 x 2.8 x 200, two rivets below and a 6 pin above",
         f"Top hand to ring {D['hand_to_ring']:,.0f}; packed {D['packed_L']:,.0f}",
         "Pin rating 302 N nominal, 256 to 347 N band",
+        "Hook head (21) takes the ring's place in the fork: SMR-DWG-111",
+        "Pole head marked: only canoes 7 m or longer with 3 crew",
         "Third-angle; ring centre at the origin, pole on +X",
     ], x=276, y=118, width=146)
     out = s.save(ROOT / "cad" / "drawings" / "SMR-DWG-001")

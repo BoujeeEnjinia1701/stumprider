@@ -3,7 +3,7 @@ doc_id: SMR-BLD-001
 title: StumpRider prototype build plan
 project: StumpRider
 doc_type: Build plan
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-10-03'
 author: Amish Chadha
@@ -13,6 +13,10 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: First build plan; design made constructable (SMR-DDR-002)
+- version: "0.2"
+  date: '2026-10-03'
+  author: Amish Chadha
+  change: Round 2 decisions (SMR-DDR-003); hook head, interim rule lettered on the pole head, crutch kept on the canoe, local production variant costed for TRL 4
 ---
 
 # StumpRider prototype build plan
@@ -27,7 +31,7 @@ revisions:
 
 *Figure 1. The kit, numbered in build order.*
 
-The kit is a release tool for a gillnet snagged on a drowned tree. A hinged steel ring closes round the net line and is pushed down onto the snag by a three-piece aluminium pole; the pole holds the ring by a fork and a thin aluminium shear pin that breaks before the pull can heel the canoe too far. A tether on a floating winder brings the ring back, a pinned-on weight works snags too deep for the pole, and a clamp-on crutch with a roller guides the net line over the gunwale. There are 17 components: ten are made (the ring, pole head, shear pins, pole sections, sleeves, float winder, jigging weight, crutch frame, roller and clamp screw) and seven are bought (bolts, pins, rivets, cap, cord and a small tube). The steel parts are bent, cut, drilled and welded with a stick welder and then hot-dip galvanised; the aluminium parts are cut and drilled. The parts for one kit cost about USD 93 at prototype prices.
+The kit is a release tool for a gillnet snagged on a drowned tree. A hinged steel ring closes round the net line and is pushed down onto the snag by a three-piece aluminium pole; the pole holds the ring by a fork and a thin aluminium shear pin that breaks before the pull can heel the canoe too far. A tether on a floating winder brings the ring back, a pinned-on weight works snags too deep for the pole, and a clamp-on crutch with a roller guides the net line over the gunwale. There are 18 components: eleven are made (the ring, pole head, shear pins, pole sections, sleeves, float winder, jigging weight, crutch frame, roller, clamp screw and the hook head for wrapped nets) and seven are bought (bolts, pins, rivets, cap, cord and a small tube). The steel parts are bent, cut, drilled and welded with a stick welder and then hot-dip galvanised; the aluminium parts are cut and drilled. The parts for one kit cost about USD 96 at prototype prices. The crutch stays clamped on the canoe as a fitting and the jigging weight is kept at the landing, so the kit carried in the canoe is about 4.2 kg.
 
 ## 2. What changed to make it buildable
 
@@ -96,7 +100,7 @@ Sizes are in millimetres. Weld only bare steel; galvanise after all welding and 
 4. Hold the cheeks under the disc with an 8 thick spacer between them, centred on the disc and square to it, and weld them to the disc.
 5. Clamp the cheeks together on the spacer and drill a 2.1 hole through both, 55 below the disc, on their centre line.
 6. Drill a 6.5 hole straight across the tube, 60 above the disc.
-7. Galvanise. Paint "302 N PIN ONLY" on the tube.
+7. Galvanise. Paint "302 N PIN ONLY" on the tube, and under it the interim rule "ONLY CANOES 7 m OR LONGER WITH 3 CREW" (SMR-DDR-003). The rule stays until the heel tests by canoe class set a pin for smaller canoes.
 
 **How it fits the parts next to it.** The pole goes into the tube until it rests on the disc and is held by a lock pin. The cheeks straddle the ring's tang with 1 clear each side; the tang's top stops 45 below the disc, so it never touches it.
 
@@ -258,7 +262,28 @@ Sizes are in millimetres. Weld only bare steel; galvanise after all welding and 
 
 **Check before moving on.** It turns by hand through the full 30 to 60 range.
 
-### 3.11 Bought components
+### 3.11 Hook head (21)
+
+![Making sketch: hook head](../cad/drawings/SMR-DWG-111.png)
+
+**What it is and what it is made from.** A second head for the end of the pole, used in place of the ring when a net is wrapped round a branch: a J hook that catches the bight of the net and draws it back round the branch (SMR-DDR-003). 6 x 28 flat bar and 12 round bar.
+
+**How to make it.**
+
+1. Cut 50 of 6 x 28 flat bar. Drill 2.1 for the shear pin 10 from the top and 10.5 for the tether 26 below it, on the centre line.
+2. Cut about 150 of 12 bar. Bend a J over a 56 round former: 30 straight, the bend, and a 30 tip parallel to the straight; the throat is 44 inside.
+3. Weld the straight end square under the flat, on its centre line, with the hook opening upward.
+4. Galvanise with the ring.
+
+**How it fits the parts next to it.** With the ring off the pole, the flat goes between the fork cheeks and takes the same calibrated shear pin, so it lets go at the same load as the ring.
+
+![The hook head in the fork](05-build-plan/joint-10.png)
+
+*Figure 11. Hook head in the fork, shear pin through.*
+
+**Check before moving on.** The hook head swings freely in the fork; a 2 rod passes cheek, flat and cheek holes when lined up; a 16 rope doubled drops into the throat. About 0.19 kg.
+
+### 3.12 Bought components
 
 - **Hinge bolt (2):** M8 x 30 stainless bolt, nyloc nut and two washers.
 - **Gate pin (3):** 8 x 30 stainless clevis pin with an R-clip; tie a 300 length of 3 cord through the R-clip and round the gate ear.
@@ -334,7 +359,17 @@ Near the bow, where the operator will kneel, set the web on the gunwale with the
 
 ![Step 11](05-build-plan/step-11.png)
 
-Take out the shear pin and lift the pole head off the tang. Put the jigging weight's cheeks over the tang and fit a lock pin through the middle hole. Tie the tether's end to a thwart before working.
+Take out the shear pin and lift the pole head off the tang. Put the jigging weight's cheeks over the tang and fit a lock pin through the middle hole. Tie the tether's end to a thwart before working. The jigging weight is kept at the landing and taken out only for a known deep set.
+
+### Step 12: hook head (wrapped nets only)
+
+![Step 12](05-build-plan/step-12.png)
+
+Take out the shear pin and lift the pole head off the ring's tang. Put the fork over the hook head's flat, push a calibrated shear pin through and bend both ends over. Run the hook down beside the net line, catch the bight below the branch and draw it back round the branch half a turn at a time, kneeling, with the crew slackening the line. If the net does not come, cut it. Walking the ring back round the branch is still taught and tried first.
+
+### Local production variant (costed, built alongside at TRL 4)
+
+The aluminium kit above is the design. A local production variant is costed line by line in `bom/bom-local-variant.csv` (SMR-DDR-003): three seasoned bamboo sections about 35 mm across, cut so a node closes each end and treated against rot, joined by pinned steel ferrules in place of the aluminium sleeves and rivets; and one crutch and jigging weight shared by five canoes at a landing. It costs about USD 56 a kit and the carried kit is about 3.6 kg. It is built beside the aluminium prototype at TRL 4 so stiffness, rot and cost can be compared; it is not drawn at TRL 3.
 
 ## 5. First checks
 
@@ -369,7 +404,7 @@ Work stops at each of these points and goes on only when everything listed is tr
 ## 8. Where the numbers come from
 
 - Model: `cad/src/model.py` (sizes, constructability checks), STEP files in `cad/step/`.
-- Drawings: `cad/drawings/SMR-DWG-001` (general arrangement) and `SMR-DWG-101` to `SMR-DWG-110` (making sketches).
+- Drawings: `cad/drawings/SMR-DWG-001` (general arrangement) and `SMR-DWG-101` to `SMR-DWG-111` (making sketches).
 - Calculations: `docs/04-calcs/01-sizing.md` (SMR-CAL-001), `docs/04-calcs/sizing.py` and `docs/04-calcs/results.csv`.
-- Bill of materials: `bom/bom.csv`.
+- Bill of materials: `bom/bom.csv`; local production variant `bom/bom-local-variant.csv`.
 - Pictures: `cad/src/build_plan_media.py`.

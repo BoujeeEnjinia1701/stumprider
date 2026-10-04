@@ -3,7 +3,7 @@ doc_id: SMR-CAL-001
 title: StumpRider sizing calculations
 project: StumpRider
 doc_type: Calculation note
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-10-03'
 author: Amish Chadha
@@ -13,15 +13,19 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: First issue at TRL 3, on the constructable design of SMR-DDR-002
+- version: "0.2"
+  date: '2026-10-03'
+  author: Amish Chadha
+  change: 'Re-run with Amish''s round 2 decisions (SMR-DDR-003): hook head, interim rule on canoes, carried kit with the crutch on the canoe and the weight at the landing, local production variant costed'
 ---
 
 # StumpRider sizing calculations
 
-On paper, a 2.0 mm soft aluminium shear pin (302 N nominal) frees a net hooked over a branch with a margin of at least two, and breaks before the pull can heel the 8 m design canoe more than 4.4 deg. The tool reaches 4.18 m from the top hand to the ring and the tether works snags to 8 m. Four results fall short: a net wrapped once round a branch needs more pull than the pin allows (R1); the same pin would heel a small dugout about 24 deg (R3); the whole kit weighs 6.5 kg (R7); and a kit costs USD 92.50 at prototype prices (R10). Each is posed as a decision for Amish in `docs/REVIEW.md`.
+On paper, a 2.0 mm soft aluminium shear pin (302 N nominal) frees a net hooked over a branch with a margin of at least two, and breaks before the pull can heel the 8 m design canoe more than 4.4 deg. The tool reaches 4.18 m from the top hand to the ring and the tether works snags to 8 m. This issue carries Amish's round 2 decisions of 2026-10-03 (SMR-DDR-003). A net wrapped once round a branch still needs more pull than the pin allows (R1 at risk); the hook head added for it is tried beside the ring at TRL 4. Small canoes are kept off the tool by the interim rule printed on the pole head until the TRL 4 heel tests set a pin per class (R3 met where the tool is allowed). With the crutch left clamped on the canoe and the jigging weight at the landing, the aluminium prototype's carried kit is 4.22 kg with the hook head, 0.22 kg over R7. A prototype kit costs USD 95.50; the local production variant (bamboo sections, crutch and weight shared by five canoes), costed to be built beside it at TRL 4, costs USD 55.90 and carries 3.56 kg (R10 not met by either).
 
 Every figure comes from `docs/04-calcs/sizing.py`, which imports the parametric model (`cad/src/model.py`), so the sizes here are those of the STEP files, the drawings and the build plan. Tags in square brackets match the script output and `docs/04-calcs/results.csv`. These are screening estimates for a paper proof of concept; they do not replace the pin calibration on CalRig, the canoe heel test or the staged-snag trials, which are TRL 4 work.
 
-> **Safety:** The pin rating is a safety limit. It is valid only for pins cut from a reel whose sample has been broken on CalRig within 256 to 347 N, and only for canoes like the design canoe. Until a heel test says otherwise the tool is not used from canoes under 7 m or with fewer than three crew, the operator kneels, and every person wears a life jacket.
+> **Safety:** The pin rating is a safety limit. It is valid only for pins cut from a reel whose sample has been broken on CalRig within 256 to 347 N, and only for canoes like the design canoe. The interim rule is printed on the pole head: the tool is used only from canoes of 7 m or more with at least three crew, until the TRL 4 heel tests set a pin per canoe class. The operator kneels, and every person wears a life jacket. The hook head is pinned with the same shear pin and carries the same limit.
 
 ## 1. Assumptions
 
@@ -54,7 +58,7 @@ When the operator pulls up on the pole, the pole pulls down and outboard on the 
 | Design canoe | 550 kg | 0.69 m | 461 mm | 40 deg | 3.4 deg | 4.4 deg | 523 N |
 | Small dugout | 280 kg | 0.15 m | 299 mm | 39 deg | 23.7 deg | 34.1 deg | 53 N |
 
-The pin protects the design canoe with a margin of 1.5 over the top of its band (kneeling). It does not protect the small dugout: 53 N heels it 5 deg, less than half of what a hooked net needs. A lighter 1.4 mm pin (148 N nominal [O11]) still heels the dugout 12.2 deg [L5]. Small canoes are therefore not covered by this design; the interim rule (no use from canoes under 7 m or with fewer than three crew) stands until a heel test, and the long-term answer is a decision for Amish (R3).
+The pin protects the design canoe with a margin of 1.5 over the top of its band (kneeling). It does not protect the small dugout: 53 N heels it 5 deg, less than half of what a hooked net needs. A lighter 1.4 mm pin (148 N nominal [O11], option B, not chosen) would still heel the dugout 12.2 deg [L5]. As Amish decided (SMR-DDR-003, D-A2: "A now, and C in the TRL 4 heel tests"), the interim rule, only canoes of 7 m or more with at least three crew, is printed on the pole head now, and small canoes are not served. The planned TRL 4 step is to heel-test real canoes by size class and set a pin diameter for each class from the measured righting moment; until then K5 and K6 describe a canoe the rule keeps the tool off. R3 is met on paper where the tool is allowed.
 
 ## 4. Pull needed to free the net
 
@@ -67,7 +71,7 @@ The net lies over the branch with a contact angle theta. To lift it, the ring mu
 | Hooked, half a turn | 81 N [F1] | 126 N [F2] | Frees, margin 2.0 at the bottom of the band [F5] |
 | Wrapped once round, one and a half turns | 368 N [F3] | 2,260 N [F4] | Breaks the pin first |
 
-If the crew keeps full tension while the operator lifts, the hooked case rises to 196 N [F6], still inside the band; slackening the line is the operating rule. A wrapped net cannot be lifted straight off: the ring has to walk it back round the branch half a turn at a time (each half turn divides the pull by 1.6 to 4.8), or the net is cut. R1 is at risk until the staged-snag trials show how often nets wrap and whether the ring can unwind them.
+If the crew keeps full tension while the operator lifts, the hooked case rises to 196 N [F6], still inside the band; slackening the line is the operating rule. A wrapped net cannot be lifted straight off: the ring has to walk it back round the branch half a turn at a time (each half turn divides the pull by 1.6 to 4.8), or the net is cut. The hook head (SMR-DDR-003, D-A1 B) gives a second way to unwind a wrap: it pins into the same fork with the same shear pin, so it pulls with at most 347 N [F7], and draws the bight of the net back round the branch half a turn at a time rather than lifting it through the wrap. R1 stays at risk until the staged-snag trials at TRL 4, where the hook head is made and tried beside the ring and the walking-back technique is taught either way, show how often nets wrap and whether they can be unwound.
 
 ## 5. Reach
 
@@ -109,17 +113,19 @@ The float winder gives 1.26 kg of net lift [B1]. The ring and the cord weigh 0.6
 | Jigging weight | 1.11 kg [M4] |
 | Gunwale crutch | 1.37 kg [M5] |
 | Tether cord, float winder, spare pins | 0.29 kg [M6] |
+| Hook head | 0.19 kg [M10] |
 | Working tool (ring, head, pole, pins) | 3.73 kg [M7] |
-| Whole kit | 6.5 kg [M8] |
+| Whole kit, everything in the BOM | 6.69 kg [M8] |
+| Carried in the canoe (crutch on the canoe, weight at the landing), with the hook head | 4.22 kg [M11] |
 
-The longest packed piece is a section with its sleeve, 1.55 m [M9]; packed length meets R7. The kit mass does not: the jigging weight and the steel crutch are 2.5 kg of it. Options (decision for Amish): crutch left clamped on the canoe and weight kept at the landing, 4.02 kg carried [O9]; the same with bamboo sections, 3.37 kg [O10]; weight left out only, 5.39 kg [O1]; weight out and a hardwood crutch block, 4.9 kg [O4].
+The longest packed piece is a section with its sleeve, 1.55 m [M9]; packed length meets R7. As Amish decided (SMR-DDR-003, D-A3 A), the crutch stays clamped on the canoe as a fitting and the jigging weight is kept at the landing for deep sets, so the kit carried in the canoe is 4.02 kg [O9], and 4.22 kg with the hook head [M11]: **R7 is not met on paper, by 0.22 kg**. The local production variant (bamboo sections with steel ferrules) carries 3.56 kg with the hook head [O10], which meets R7; bamboo is judged under D-A4.
 
 ## 9. Build time and cost
 
-- Workshop time for one kit, one smith: 7.7 h [T1] (estimate, galvanising sent out). R9 met on paper, with little to spare.
-- Parts cost of one kit at prototype prices: USD 92.50 [C1]. R10 not met. The pole, sleeves and rivets are 31 % [C5], galvanising 13 % [C6] and the crutch 13 % [C7].
-- Value-engineering target: USD 2,000. Estimated cost of the constructable design: USD 284 for the prototype run of three kits and calibration wire (USD 1,716 under the target) [C2 to C4].
-- Options for R10 (decision for Amish): bamboo pole sections with steel ferrules, USD 70.50 [O5]; zinc-rich paint in place of galvanising, USD 83.50 [O6]; crutch and weight shared, one set per five canoes, USD 74.90 [O7]; bamboo and sharing together, USD 52.90 [O8].
+- Workshop time for one kit, one smith: 8.0 h [T1] (estimate, galvanising sent out), 20 min more for the hook head. R9 met on paper, at the limit of one working day.
+- Parts cost of one kit at prototype prices: USD 95.50 [C1], USD 3 more for the hook head. R10 not met. The pole, sleeves and rivets are 30 % [C5], galvanising 13 % [C6] and the crutch 13 % [C7].
+- Value-engineering target: USD 2,000. Estimated cost of the constructable design: USD 292.50 for the prototype run of three kits and calibration wire (USD 1,707.50 under the target) [C2 to C4].
+- Local production variant (SMR-DDR-003, D-A4 C), costed line by line in `bom/bom-local-variant.csv`: bamboo pole sections with steel ferrules, and one crutch and jigging weight shared by five canoes at a landing: USD 55.90 a kit with the hook head [C8, O8]. It is built alongside the aluminium prototype at TRL 4 so the two can be compared; local prices and batch galvanising may bring it nearer the USD 40 target. The single options for comparison: bamboo only USD 73.50 [O5]; zinc-rich paint in place of galvanising USD 86.50 [O6]; sharing only USD 77.90 [O7].
 
 ## 10. Results against the requirements
 
@@ -127,13 +133,13 @@ The longest packed piece is a section with its sleeve, 1.55 m [M9]; packed lengt
 
 | Requirement | Result | Status |
 | --- | --- | --- |
-| R1 | Hooked nets 81 to 126 N; wrapped nets 368 N to 2.3 kN | At risk |
+| R1 | Hooked nets 81 to 126 N; wrapped nets 368 N to 2.3 kN; hook head added, tried at TRL 4 | At risk |
 | R2 | 4.18 m top hand to ring; tether to 8 m | Met on paper |
-| R3 | Design canoe 3.4 to 4.4 deg; small dugout 24 deg; band depends on calibration | At risk |
+| R3 | Design canoe 3.4 to 4.4 deg; band depends on calibration; canoes under 7 m or with fewer than three crew excluded by the interim rule printed on the pole head, per-class pins at TRL 4 | Met on paper where the tool is allowed; small canoes not served |
 | R4 | Pull capped at 347 N; mesh damage not calculable | Cannot be shown on paper |
 | R5 | Release time | Cannot be shown on paper |
 | R6 | 100 mm hinged ring | Met on paper |
-| R7 | Packed 1.55 m; mass 6.5 kg | Not met (mass) |
+| R7 | Packed 1.55 m; carried 4.22 kg (prototype, with the hook head); 3.56 kg (local production variant) | Not met by 0.22 kg (prototype); met by the variant |
 | R8 | Galvanised steel, aluminium, stainless, polymers | Met on paper |
-| R9 | 7.7 h | Met on paper |
-| R10 | USD 92.50 per kit | Not met |
+| R9 | 8.0 h | Met on paper, at the limit |
+| R10 | USD 95.50 per kit (prototype); USD 55.90 (local production variant) | Not met |

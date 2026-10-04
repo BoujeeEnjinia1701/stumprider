@@ -1,5 +1,65 @@
 # Review note: StumpRider
 
+## Session 2026-10-03: round 2 requirement decisions applied
+
+Amish, 2026-10-03: "i approve all of the 47 recommendations provided by you. Execute them." For StumpRider that decides D-A1 to D-A4 of the TRL 3 session below as recommended: D-A1 B (hook head), D-A2 "A now, and C in the TRL 4 heel tests" (safety), D-A3 A and D-A4 C. D-A3 and D-A4 interact: the aluminium prototype stays the TRL 3 design, and the local production variant (bamboo plus sharing) is documented as a costed variant to be built alongside it at TRL 4. Recorded in `docs/decisions/0003-requirement-decisions-round2.md` (SMR-DDR-003) and under Decisions made in `docs/06-design-decisions.md` (SMR-DEC-001 v0.2). Phase cap TRL 3 kept: no test articles, test plans, firmware, build-log entries or purchasing lists. Not committed or pushed. This session sits at the top of the TRL 3 history; the earlier sessions follow in date order below.
+
+### What changed
+
+- **D-A1 B, R1: hook head.** `cad/src/model.py`: `hook_head()` (6 x 28 x 50 flat with the shear-pin and tether holes, J hook of 12 mm bar, 44 mm throat), BOM key `hook`, line 21 (USD 3, 0.19 kg); six new checks (no overlap in the fork, fork clearance, shear pin bearing, clear of the end plate, throat size): 86 of 86 pass. `cad/step/hook-head.step`; sketch SMR-DWG-111, joint 10, step 12 and the overview from `cad/src/build_plan_media.py`; build plan section 3.11 and step 12.
+- **D-A2 A now, C at TRL 4, R3 (safety).** The interim rule "ONLY CANOES 7 m OR LONGER WITH 3 CREW" is lettered on the pole head (BOM line 19, build plan 3.2 step 7, SMR-DWG-001 Rev P3 note). The sizing script now marks the small dugout and the light pin as not served under the rule. C is recorded as the planned TRL 4 step: heel tests by canoe class set a pin per class.
+- **D-A3 A, R7.** No part changes; the crutch is a fitting left clamped on the canoe and the jigging weight is kept at the landing. SMR-CAL-001 now reports the carried kit [M11].
+- **D-A4 C, R10.** New `bom/bom-local-variant.csv`: the same kit with bamboo sections and pinned steel ferrules, and one crutch and jigging weight (and their galvanising share) shared by five canoes. Costed at USD 55.90 a kit [C8]; the build plan has a short "Local production variant" section. Not modelled or drawn at TRL 3.
+- `docs/04-calcs/sizing.py` re-run: `results.csv`, `docs/04-calcs/01-sizing.md` (SMR-CAL-001 v0.2). `cad/src/concept_media.py` writes `media/model.glb` itself with `Compound([...])`, linear deflection 1.0 and angular 0.35 (the kit's `export_web_model` uses `Compound(children=...)`); `media/viewer.html` unchanged. `cad/src/product_model.py` adds the hook head to the packed kit.
+- Text: `docs/03-requirements.md` v0.4, `docs/02-concept.md` v0.4, `docs/05-build-plan.md` v0.2, `README.md`; `project.yaml` trl_evidence gains SMR-DDR-003 and the variant BOM.
+
+### Requirement status, before and after
+
+| ID | Before | After |
+| --- | --- | --- |
+| R1 | At risk (wrapped nets 368 N to 2.3 kN) | At risk; hook head added, pulls at most 347 N, tried at TRL 4 |
+| R3 | At risk (small dugout 24 deg) | Met on paper where the tool is allowed; canoes under 7 m or with fewer than three crew not served until the TRL 4 heel tests |
+| R7 | Not met, whole kit 6.5 kg | Not met by 0.22 kg: carried kit 4.22 kg with the hook head (4.02 kg without); local production variant 3.56 kg, met |
+| R9 | Met, 7.7 h | Met at the limit, 8.0 h |
+| R10 | Not met, USD 92.50 | Not met, USD 95.50 (prototype); USD 55.90 (local production variant) |
+
+R2, R4, R5, R6 and R8 unchanged.
+
+### Cost
+
+One kit USD 92.50 before, USD 95.50 after (hook head USD 3). Prototype run of three kits and calibration wire USD 284 before, USD 292.50 after, USD 1,707.50 under the USD 2,000 value-engineering target; `budget_usd` unchanged. Local production variant USD 55.90 a kit.
+
+### New questions for Amish
+
+Each is **Proposed, awaiting Amish**, listed in SMR-DEC-001 as O5 and O6.
+
+**O5. R7 for the aluminium prototype.**
+- State: the carried kit is 4.02 kg without the hook head and 4.22 kg with it, against "under 4 kg"; the local production variant carries 3.56 kg.
+- Option A: judge R7 on the local production variant and accept 4.22 kg for the aluminium prototype, whose job is to measure the tool. No change.
+- Option B: lighten the prototype: pole head socket of 38 x 2 tube 80 long (about 0.17 kg less) and the hook head carried only when wrapped nets are expected: 3.85 kg carried, 4.05 kg with the hook head.
+- Option C: restate R7 to 4.5 kg.
+- **Recommendation: A.** The variant meets R7 and is built at TRL 4 for exactly this comparison.
+
+**O6. R9 at its limit.**
+- State: with the hook head one smith needs about 8.0 h a kit (estimate), the whole of a working day.
+- Option A: accept and time it in the TRL 4 build trial.
+- Option B: have the HDPE roller turned and the clamp screw made by a supplier, saving about 30 min (estimate).
+- **Recommendation: A.** The times are estimates; the build trial gives the real figure.
+
+### Safety notes
+
+- D-A2 is a safety decision. The interim rule is now lettered on the pole head, beside "302 N PIN ONLY". The tool is not used from canoes under 7 m or with fewer than three crew until heel tests by canoe class have set a pin for them; no pin is chosen for small canoes on paper.
+- The hook head is fitted with the same calibrated shear pin, so it lets go at the same load as the ring; never fit it with a bolt or nail. Its point can catch netting or clothing: it is carried with the pole head off it, and the operator kneels and the crew slackens the line, as with the ring. Cutting the net stays the rule if the canoe heels.
+- Nobody enters the water, ever; the tool is handed out only with child-protection work.
+
+### Renders
+
+The photoreal renders made on Amish's Mac predate this session. The hero (packed kit) now has an eighteenth item, the hook head, beside the lock pin and spare tube, so it needs a re-render; the exploded and detail views of the working end are unchanged.
+
+### Recommended next step
+
+Amish decides O5 and O6. The design is then ready for TRL 4 once Amish chooses to start it: build one aluminium kit with its hook head and one local production variant, calibrate a wire reel on CalRig, run the bench and moored heel checks of SMR-BLD-001 section 5, the heel tests by canoe class, and the staged-snag trials with the ring and the hook head.
+
 ## Session 2026-09-30: scaffolded
 
 ### What was done

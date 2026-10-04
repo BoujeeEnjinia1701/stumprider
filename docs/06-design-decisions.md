@@ -3,7 +3,7 @@ doc_id: SMR-DEC-001
 title: StumpRider design decisions register
 project: StumpRider
 doc_type: Design decisions register
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-10-03'
 author: Amish Chadha
@@ -13,6 +13,10 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: Register opened; design decisions made under Amish's 2026-10-03 pre-approvals; four requirement decisions proposed, awaiting Amish
+- version: "0.2"
+  date: '2026-10-03'
+  author: Amish Chadha
+  change: Round 2. Amish decided O1 to O4 as recommended (SMR-DDR-003); two new questions proposed, awaiting Amish
 ---
 
 # StumpRider design decisions register
@@ -23,16 +27,14 @@ Every design decision still to be made, and every decision made, in one place. E
 
 ## Open decisions
 
-Requirements that are not met or at risk on paper are Amish's to decide. The state, options and recommendation for each are set out in `docs/REVIEW.md` (TRL 3, Decisions for Amish).
+Amish decided O1 to O4 on 2026-10-03 (SMR-DDR-003); they are listed under Decisions made. The questions below were raised while carrying them out; the state, options and recommendation for each are in `docs/REVIEW.md` (session 2026-10-03, round 2).
 
 *Table 1. Open decisions, all proposed, awaiting Amish.*
 
 | # | Decision needed | Options | Recommendation | Affects in the build | Source |
 | --- | --- | --- | --- | --- | --- |
-| O1 | R1: nets wrapped round a branch need 368 N to 2.3 kN, above the pin | A: teach working the ring back round the branch, no change; B: add a pinned hook head that uses the same fork (about USD 3, 0.2 kg); C: a stronger pin for wrapped nets | B, tried beside the ring at TRL 4, with A taught in both cases | One extra made part and sketch | REVIEW.md, D-A1 |
-| O2 | R3: the pin would heel a 5.5 m dugout about 24 deg | A: keep the interim rule (canoes 7 m and over, three crew); B: a light 1.4 mm pin for 5 to 7 m canoes (still 12 deg); C: heel-test canoes by class and set a pin per class | A now, and C in the TRL 4 heel tests | Labels and the first checks; a second pin reel if C | REVIEW.md, D-A2 |
-| O3 | R7: the kit weighs 6.5 kg | A: crutch stays clamped on the canoe, weight kept at the landing (4.02 kg carried); B: A plus bamboo sections (3.37 kg); C: weight left out only (5.39 kg) | A for the prototype; bamboo is judged under O4 | What is packed; none of the parts change | REVIEW.md, D-A3 |
-| O4 | R10: a kit costs USD 92.50 at prototype prices | A: bamboo pole sections with steel ferrules (USD 70.50); B: crutch and weight shared, one set per five canoes (USD 74.90); C: A and B together (USD 52.90) | C as the local production variant, built alongside the aluminium prototype at TRL 4 | A bamboo variant of the pole and its sketch | REVIEW.md, D-A4 |
+| O5 | R7 for the aluminium prototype: the carried kit is 4.22 kg with the hook head, 0.22 kg over 4 kg (4.02 kg without it); the local production variant carries 3.56 kg | A: judge R7 on the local production variant and accept 4.22 kg for the aluminium prototype, which exists to measure the tool; B: lighten the prototype: pole head socket of 38 x 2 tube 80 long (about 0.17 kg less) and the hook head carried only when wrapped nets are expected (3.85 kg carried, 4.05 kg with the hook head); C: restate R7 to 4.5 kg | A: no change to the prototype; R7 is shown by the variant at TRL 4 | None | SMR-CAL-001, M11 and O10 |
+| O6 | R9 at its limit: with the hook head one smith needs about 8.0 h for a kit, the whole of a working day | A: accept and time it in the TRL 4 build trial; B: have the HDPE roller turned and the clamp screw made by a supplier, saving about 30 min of the smith's time (estimate) | A | None | SMR-CAL-001, T1 |
 
 ## To confirm when parts are bought
 
@@ -53,7 +55,7 @@ These are facts that can only be settled with real parts, a real canoe or the fi
 
 ## Value engineering
 
-Value-engineering target: USD 2,000 (a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 284 for the prototype run of three kits and calibration wire (USD 1,716 under the target); one kit is USD 92.50. Main cost drivers and savings worth trying:
+Value-engineering target: USD 2,000 (a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 292.50 for the prototype run of three kits and calibration wire (USD 1,707.50 under the target); one kit is USD 95.50 with the hook head. The local production variant (SMR-DDR-003, `bom/bom-local-variant.csv`) is USD 55.90 a kit. Main cost drivers and savings worth trying:
 
 - The largest lines are the aluminium pole, sleeves and rivets (31 % of a kit), galvanising (13 %) and the crutch (13 %).
 - Savings worth trying: bamboo pole sections with steel ferrules (about USD 22 a kit); one crutch and jigging weight shared by five canoes at a landing (about USD 18 a kit); galvanising a batch of kits together, which spreads the galvaniser's minimum lot; zinc-rich paint only where no galvaniser is near (about USD 9, at some risk to R8).
@@ -69,3 +71,11 @@ Value-engineering target: USD 2,000 (a hypothetical control target, not a limit)
 | 2026-10-03 | Design for construction, changes C1 to C12, and assumptions A1 to A5 | Amish, same pre-approvals | SMR-DDR-002 |
 | 2026-10-03 | Safety stops S1 to S5 and the first checks, including pin calibration and a moored heel test before any use on a snag (conservative; a gate, not relaxed) | Amish, same pre-approvals | SMR-BLD-001, sections 5 and 6 |
 | 2026-10-03 | Appearance model departures for the renders: a plank deck and a forearm and hand beside the packed kit; a short net line over a branch and a cut-short pole for the detail view; the shear pin shown red | Amish, same pre-approvals | docs/REVIEW.md, TRL 3 section |
+| 2026-10-03 | O1, R1: option B, a hook head pinned into the same fork with the same shear pin, made and tried beside the ring in the TRL 4 staged-snag trials, with walking the ring back taught either way | Amish: "i approve all of the 47 recommendations provided by you. Execute them." | SMR-DDR-003, D-A1 |
+| 2026-10-03 | O2, R3 (safety): option A now, the interim rule (only canoes of 7 m or more with three crew) lettered on the pole head; option C as the planned TRL 4 step, heel tests by canoe class setting a pin per class | Amish, as above | SMR-DDR-003, D-A2 |
+| 2026-10-03 | O3, R7: option A, crutch left clamped on the canoe and jigging weight kept at the landing; aluminium prototype stays the TRL 3 design; bamboo judged under O4 | Amish, as above | SMR-DDR-003, D-A3 |
+| 2026-10-03 | O4, R10: option C, the local production variant (bamboo sections, crutch and weight shared by five canoes), costed and built alongside the aluminium prototype at TRL 4 | Amish, as above | SMR-DDR-003, D-A4 |
+
+## Change log
+
+- 2026-10-03, v0.2: O1 to O4 decided as recommended and carried into the design (SMR-DDR-003); O5 and O6 opened.

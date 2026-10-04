@@ -74,6 +74,7 @@ def product_parts(p=M.PARAMS):
     add("Rider ring, galvanised steel", L["ring"], C_STEEL, "metal", 1, "shell")
     add("Pole head, galvanised steel", L["head"], C_HEAD, "metal", 4, "shell")
     add("Jigging weight, galvanised steel", L["weight"], C_STEEL, "metal", 14, "shell")
+    add("Hook head, galvanised steel", L["hook"], C_STEEL, "metal", 21, "shell")
     add("Gunwale crutch, galvanised steel with HDPE roller", L["crutch"], C_STEEL, "metal", 15, "shell")
     add("Float winder, orange foam, with tether cord", L["winder"], C_FLOAT, "painted", 12, "shell")
     add("Spare pin tube", L["spares"], C_HDPE, "painted", 13, "shell")
