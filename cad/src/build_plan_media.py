@@ -228,18 +228,18 @@ def sheets():
     bv.component_sheet(Part("Hook head", M.hook_head(P), COL["hook"]),
                        [Part("Pole head and shear pin", Compound([t["head"], t["shear"]]), "#D1D5DB")],
                        "StumpRider", "SMR-DWG-111", "Hook head (for nets wrapped round a branch)",
-                       "6 mm flat bar; 10 mm mild steel round bar",
+                       "6 mm flat bar; 12 mm mild steel round bar (SMR-DEC-001 F1)",
                        ["Flat: 6 x 28 flat bar, 60 long. Drill 10.5 at 12",
                         "  and 2.1 at 50 from the bottom end, on the centre",
                         "  line (the same holes as the ring's tang).",
-                        "Bar: about 220 of 10 round bar. Bend a J round a",
-                        "  50 pipe in the vice: 30 bend radius to the bar",
-                        "  centre, legs 60 apart, tip leg 35 long.",
-                        "Weld the long leg 10 up the flat's bottom edge,",
-                        "  both sides, in line with the flat. Galvanise.",
+                        "Bar: about 220 of 12 round bar (ring stock). Bend a",
+                        "  J round a 48 pipe in the vice: 30 bend radius to",
+                        "  the bar centre, legs 60 apart, tip leg 35 long.",
+                        "Butt the long leg on the flat's bottom edge, in line",
+                        "  with the flat; fillet weld all round. Galvanise.",
                         "Check: the fork slides over the flat freely and a",
                         "  2 rod passes cheek, flat and cheek."],
-                       DATE, inset_view=(20, -50))
+                       "2026-10-24", inset_view=(20, -50))
     bs = M.bamboo_sections(P)
     layb = Rot(0, 90, 0) * Pos(-XP, 0, -(J1 - 120))
     jw = win(XP, 0, J1, 80, 80, 260)

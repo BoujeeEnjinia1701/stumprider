@@ -1,0 +1,47 @@
+{
+ "level": "D3",
+ "stage": "P3",
+ "hash": "5637c563d3e577c8",
+ "options": {
+  "A": {
+   "title": "Rider ring on a shear-pin pole",
+   "parts": 77,
+   "made_or_bought": 36,
+   "fasteners": 22,
+   "welds": 19,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 7.2,
+   "step_files": 36
+  },
+  "B": {
+   "title": "Line-riding knocker weight",
+   "parts": 55,
+   "made_or_bought": 26,
+   "fasteners": 10,
+   "welds": 19,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 4.5,
+   "step_files": 0
+  },
+  "C": {
+   "title": "Grapnel cross-pull",
+   "parts": 42,
+   "made_or_bought": 23,
+   "fasteners": 5,
+   "welds": 14,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 3.8,
+   "step_files": 0
+  }
+ },
+ "failures": [],
+ "warnings": [],
+ "passed": true,
+ "seconds": 62.3
+}

@@ -1,4 +1,4 @@
-"""StumpRider general arrangement sheet SMR-DWG-001, Rev P3 (TRL 3; SMR-DDR-002 and SMR-DDR-003 applied).
+"""StumpRider general arrangement sheet SMR-DWG-001, Rev P4 (TRL 3; SMR-DDR-002, SMR-DDR-003 and SMR-DEC-001 F1 applied).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/SMR-DWG-001.svg, .pdf and .png from the parametric model in cad/src/model.py
@@ -35,15 +35,16 @@ def main():
     fv = project_views(full, work / "full")
     hv = project_views(M.hook_head(P), work / "hook")
     s = Sheet(project="StumpRider", title="Canoe-worked gillnet release tool: general arrangement",
-              dwg_no="SMR-DWG-001", rev="P3", author="Amish Chadha", date=DATE, scale=None,
+              dwg_no="SMR-DWG-001", rev="P4", author="Amish Chadha", date="2026-10-24", scale=None,
               material="Kit per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
                          ("P2", "SMR-DDR-002: design for construction", DATE, "AC"),
-                         ("P3", "SMR-DDR-003: hook head detail; bamboo variant note", DATE, "AC")])
+                         ("P3", "SMR-DDR-003: hook head detail; bamboo variant note", DATE, "AC"),
+                         ("P4", "SMR-DEC-001 F1: hook head J of 12 mm bar, butt welded", "2026-10-24", "AC")])
     s.add_ortho(views)
     vb = _viewbox(Path(fv["front"]).read_text())
     vw, vh = vb[2] * FULL_K, vb[3] * FULL_K
-    x0, y0 = 279.0, 36.0
+    x0, y0 = 279.0, 42.0
     s.add_svg(fv["front"], x0, y0, vw, vh, scale=FULL_K)
     s._layers += [
         _t(x0 + vw / 2, y0 + vh + 6, "WHOLE TOOL, ASSEMBLED", 2.8, 600, INK, "middle"),
@@ -74,8 +75,8 @@ def main():
         "  38 x 2.8 x 200, two rivets below and a 6 pin above",
         f"Top hand to ring {D['hand_to_ring']:,.0f}; packed {D['packed_L']:,.0f}",
         "Pin rating 302 N nominal, 256 to 347 N band",
-        "Hook head: 6 x 28 x 60 flat, holes 10.5 and 2.1; 10 bar J,",
-        "  R30 bend, 50 clear throat (SMR-DWG-111)",
+        "Hook head: 6 x 28 x 60 flat, holes 10.5 and 2.1; 12 bar J,",
+        "  R30 bend, 48 clear throat (SMR-DWG-111; DEC F1)",
         "Bamboo local variant: 36 culms, ferrules 40 x 1.5 x 160 (DWG-112)",
         "Third-angle; ring centre at the origin, pole on +X",
     ], x=276, y=118, width=146)

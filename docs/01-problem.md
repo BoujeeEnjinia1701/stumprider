@@ -3,9 +3,9 @@ doc_id: SMR-PRB-001
 title: StumpRider problem statement
 project: StumpRider
 doc_type: Problem statement
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-10-03'
+date: '2026-10-24'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,6 +17,10 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: TRL 2 update; design canoe and snag cases stated, budget written as a value-engineering target, open questions settled or moved to the design decisions register, first co-design candidates, safety section
+- version: "0.3"
+  date: '2026-10-24'
+  author: Amish Chadha
+  change: "Kit 1.9.1 upgrade: users-and-needs and stakeholders tables (Tables 3 and 4) for the user requirements SMR-URS-001"
 ---
 
 # StumpRider problem statement
@@ -41,6 +45,26 @@ Existing tools do not fit this job. Angling lure retrievers slide a weight or ri
 | Child protection and anti-trafficking NGOs | A tangible tool to distribute with awareness and rescue programmes | Landing sites and fishing villages along the lake |
 | Fisheries officers and fisher associations | A safe-practice measure they can promote and help make locally | District fisheries offices, landing-site committees |
 | Village blacksmiths and carpenters | Drawings they can follow with hand tools and local stock | Small workshops with a stick welder, a drill and a vice |
+
+*Table 3. Users and needs (kit 1.8; source of the user requirements in SMR-URS-001).*
+
+| User type | Goals and needs | Typical use scenario | Pain points and challenges |
+| --- | --- | --- | --- |
+| Canoe crew (operator and line handlers) | Free a snagged net quickly from the canoe, without cutting it and without anyone going in; a tool that stows among the nets and survives the canoe bottom | Two to five crew lifting a gillnet set among drowned trees; the net stops coming up; the crew holds the line taut over the gunwale while the operator works the snag | Narrow, tender canoes that heel easily; poor underwater visibility; nets hooked or wrapped at unknown depth; no tool today but cutting, pulling or diving |
+| Boat owners and boat masters | Keep nets whole and crews working; a kit cheap enough for every canoe | Buys or is given kits for several canoes at a landing | Cost; nets lost or torn; the habit of sending children down, which the tool must remove, not excuse |
+| Village blacksmiths and carpenters | Drawings they can follow with hand tools, a stick welder and local stock; parts they can mend | Makes kits in a batch for a landing; replaces bent rings and broken pins | No access to tube benders, lathes or calibrated test gear; uncertain supply of aluminium tube and pin wire |
+| Child-protection and anti-trafficking NGO staff | A practical tool to hand out with protection and awareness work, never instead of it | Distributes kits with training at landing sites alongside rescue and prevention programmes | The tool must not be read as making child labour on boats acceptable; follow-up on use and safety |
+
+*Table 4. Stakeholders.*
+
+| Stakeholder group | Role or interest | Engagement needed |
+| --- | --- | --- |
+| Child-protection NGOs (first candidate: Challenging Heights) | Distribution partner; owns the protection message the tool goes out with | Co-design of the requirements, distribution rules and the pictorial tag (UR-011); none approached yet |
+| Fisheries Commission (Volta zone) and landing-site committees | Fisheries management and safe practice under the Fisheries and Aquaculture Act, 2025 (Act 1146) | Introductions to crews; whether the tool can be promoted as a safe practice (SMR-REG-001) |
+| Ghana Maritime Authority | Safety on inland waterways, life jacket rules | Awareness of the heel limits and the life jacket rule; no approval is known to be needed (to assess) |
+| Ghanaian university fisheries department | Staged-snag trials and canoe heel tests at TRL 4 | Test partner (SMR-PLN-001) |
+| Department of Social Welfare and the Anti-Human Trafficking Unit | Enforcement of the Children's Act, 1998 (Act 560) and the Human Trafficking Act, 2005 (Act 694) | Informed through the NGO partner; the tool supports, never replaces, their work |
+| Design Molecule (Amish Chadha) | Designer and maintainer of the open design | Decisions in SMR-DEC-001 |
 
 ## Operating environment
 

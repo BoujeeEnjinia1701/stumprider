@@ -35,7 +35,8 @@ Kit (BOM line numbers in brackets, see bom/bom.csv):
   [15] gunwale crutch frame: saddle and cheeks, 4 mm steel plate, welded
   [16] crutch roller, HDPE, with M12 axle bolt, washers and nyloc nut
   [17] crutch clamp screw: M10 T-handle screw, welded nut and pad
-  [21] hook head: 10 mm steel bar hook on a 6 x 28 flat that pins into the same fork (SMR-DDR-003)
+  [21] hook head: 12 mm steel bar hook on a 6 x 28 flat that pins into the same fork (SMR-DDR-003;
+       12 mm bar since 2026-10-24, SMR-DEC-001 F1)
 
 Bamboo local variant (SMR-DDR-003, bom/bom-bamboo-variant.csv): three treated bamboo culm sections,
 36 mm outside, in place of the aluminium sections [6], sleeves [7], rivets [8] and grip cap [10],
@@ -104,8 +105,8 @@ PARAMS = {
     # hook head (SMR-DDR-003): pins into the pole head's fork in place of the ring's tang
     "hook_flat_z": (20.0, 80.0),           # 6 x 28 flat, same width and thickness as the tang
     "hook_tether_z": 32.0,                 # 10.5 mm tether hole (the tether's bowline is moved across)
-    "hook_bar_d": 10.0,
-    "hook_R": 30.0,                        # bend radius to the bar centre (throat 50 mm clear)
+    "hook_bar_d": 12.0,                    # 12 mm bar, the ring's stock (was 10 mm; SMR-DEC-001 F1, fix rule 2026-10-23)
+    "hook_R": 30.0,                        # bend radius to the bar centre (throat 48 mm clear)
     "hook_shank_z": -60.0,                 # bend centre height
     "hook_tip_z": -25.0,                   # top of the tip leg
     # bamboo local variant (SMR-DDR-003)
@@ -114,6 +115,18 @@ PARAMS = {
     "ferrule": (40.0, 1.5, 160.0),         # steel tube OD, wall, length (37 inside)
     "ferrule_bolt_down": 40.0,             # M5 bolt below the joint line
     "ferrule_pin_up": 40.0,                # lock pin above the joint line
+    # option B, line-riding knocker weight (SMR-OPT-001; concept option, not the chosen design)
+    "kb_od": 60.0, "kb_L": 120.0,          # split steel weight: 60 mm round bar, 120 mm long
+    "kb_bore": 24.0, "kb_gap": 2.0,        # bore for the net line (takes 16 mm with room), gap between halves
+    "kb_knuckle": (16.0, 8.5, 30.0),       # hinge and gate knuckles: tube OD, bore, length
+    "kb_axis_r": 38.0,                     # hinge and gate axes from the line axis
+    "kb_web_t": 6.0,                       # knuckle webs, 6 mm flat
+    # option C, grapnel cross-pull (SMR-OPT-001; concept option, not the chosen design)
+    "gr_shank": (16.0, 300.0),             # shank: round bar diameter, length
+    "gr_tine_d": 14.0,                     # four tines of 14 mm bar (12 mm before SMR-DEC-001 F2)
+    "gr_tine": (60.0, 35.0, 90.0),         # tine reach from the axis, bend radius, tip height above the tine
+    "gr_eye": (20.0, 5.0),                 # eye ring of 10 mm bar: mean radius, bar radius
+    "gr_rope_d": 10.0,                     # 10 mm braided polyester rope, 15 m
 }
 
 X_POLE = PARAMS["tang_x0"] + PARAMS["tang"][0] / 2      # 72: pole axis
@@ -448,7 +461,7 @@ def hook_head(p=PARAMS):
     flat = Pos(X_POLE, 0, (z0 + z1) / 2) * Box(tw, tt, z1 - z0)
     rb = p["hook_bar_d"] / 2
     R, zc, zt = p["hook_R"], p["hook_shank_z"], p["hook_tip_z"]
-    shank = zcyl(rb, zc, z0 + 10, X_POLE)                       # welded 10 mm up the flat's lower edge
+    shank = zcyl(rb, zc, z0, X_POLE)                            # butt welded to the flat's lower edge (SMR-DEC-001 F1)
     big = 4 * R
     bend = Pos(X_POLE - R, 0, zc) * Rot(90, 0, 0) * Torus(R, rb)
     bend = bend & (Pos(X_POLE - R, 0, zc - big / 2) * Box(big, big, big))
@@ -814,6 +827,258 @@ def checks(p=PARAMS):
         if k != "hook":
             no_overlap(f"packed: hook head / {k}", L["hook"], v)
     return r
+
+
+# ------------------------------------------------------------------ kit 1.9 interface (STANDARDS section 24)
+# Every concept option as a list of cad_parts.part() dicts at detail level D3. Option A is the design above,
+# unchanged in every dimension, broken into the parts a smith cuts, bends, drills and welds, with every bolt,
+# nut, washer, clevis pin, R-clip and rivet, and the weld beads. Options B and C are in cad/src/smr_options.py.
+sys.path[:0] = [str(Path(__file__).resolve().parent), str(ROOT / ".kit")]
+import cad_parts as cp  # noqa: E402
+from cad_parts import part, break_edges  # noqa: E402
+from smr_parts import weld_on, ring_weld, arc_weld, bent_bar, chamfer_ends  # noqa: E402
+
+TITLE = "StumpRider"
+OPTIONS = {"A": "Rider ring on a shear-pin pole", "B": "Line-riding knocker weight", "C": "Grapnel cross-pull"}
+PRINCIPLES = {
+    "A": "A hinged steel ring closed round the net line is pushed down onto the snag by a jointed pole and lifts "
+         "the net off the branch; a 2 mm soft aluminium shear pin caps the pull on the canoe.",
+    "B": "A hinged split steel weight clipped round the net line runs down it on a tether and is jigged, so its "
+         "impacts shake and knock the mesh off the branch; no pole, and the pull is only the weight's.",
+    "C": "A four-tine grapnel on a rope is swept under the net beyond the snag and pulled from the opposite "
+         "side, so the net is drawn back the way it wrapped; a shear link caps the pull.",
+}
+CHOSEN = "A"
+OPTION_VIEWS = {"A": {"el": 18, "az": -55, "scale": "person"},
+                "B": {"el": 24, "az": -50, "scale": "person"},
+                "C": {"el": 24, "az": -50, "scale": "person"}}
+# Weld beads fuse into the parts they join; split pins and R-clips sit in their pin's cross hole.
+ALLOWED_CONTACTS = [("Weld", "Rider ring"), ("Weld", "ear"), ("Weld", "Tang"), ("Weld", "fork cheek"),
+                    ("Weld", "end plate"), ("Weld", "socket"), ("Weld", "Jigging weight"), ("Weld", "Crutch"),
+                    ("Weld", "Clamp"), ("Weld", "Hook head"), ("Weld", "Knocker"), ("Weld", "knuckle"),
+                    ("Weld", "Grapnel"), ("Weld", "Link"), ("R-clip", "clevis pin"), ("R-clip", "Clevis pin")]
+
+GALV, SS, ALU = "galvanised", "stainless", "aluminium"
+
+
+def _clevis(d, grip, head_at, n_axis, name, bom, material=SS):
+    """Clevis pin with its R-clip. head_at: centre of the head's bearing face; n_axis: 'x+', 'y+' ... the
+    direction the pin runs from the head. Returns two part() dicts (pin, clip)."""
+    # cad_parts.clevis_pin runs down -Z from the head; rot maps -Z onto the pin direction
+    rot = {"y+": Rot(90, 0, 0), "y-": Rot(-90, 0, 0), "x+": Rot(0, -90, 0), "x-": Rot(0, 90, 0),
+           "z-": Rot(0, 0, 0), "z+": Rot(180, 0, 0)}[n_axis]
+    T = Pos(*head_at) * rot
+    pin = T * cp.clevis_pin(d, grip)
+    clip = T * Pos(0, 0, -(grip + d)) * cp.split_pin(d)
+    return [part(f"{name} clevis pin {d} x {grip + 2 * d:.0f}", pin, material, kind="fastener", bom=bom),
+            part(f"{name} R-clip", clip, material, kind="fastener", bom=bom)]
+
+
+def _ring_parts(p=PARAMS, at=(0, 0, 0)):
+    """Rider ring [1] with hinge bolt [2] and gate pin [3], working position (net line on Z)."""
+    R, rb, g = p["ring_R"], p["bar_d"] / 2, p["split_gap"] / 2
+    et, el, eh = p["ear"]
+    bar = Torus(R, rb)
+    T = Pos(*at)
+    out = []
+    for side, nm in ((+1, "fixed"), (-1, "swinging")):
+        keep = Pos(side * (2 * R + g), 0, 0) * Box(4 * R, 4 * R, 4 * R)
+        out.append(part(f"Rider ring {nm} half, 12 mm bar", T * chamfer_ends(bar & keep, 0.5), GALV, bom=1))
+        for sy, end in ((+1, "hinge"), (-1, "gate")):
+            ear = Pos(side * (g + et / 2), sy * (R + el / 2 - 6), 0) * Box(et, el + 12, eh)
+            ear = ear - xcyl(p["hinge_d"] / 2 + 0.25, -50, 50, sy * (R + p["ear_hole_r"]), 0) - bar
+            out.append(part(f"Rider ring {nm} half {end} ear, 6 mm flat", T * break_edges(ear, 0.5), GALV, bom=1))
+            xo = side * (g + et)
+            yc = sy * math.sqrt(R * R - xo * xo)
+            out.append(part(f"Weld, {nm} {end} ear to Rider ring bar", T * ring_weld(rb, 3.0, (xo, yc, 0), (side, 0, 0)),
+                            GALV, kind="weld", bom=1))
+    tw, tt, th = p["tang"]
+    tang = Pos(p["tang_x0"] + tw / 2, 0, -4 + th / 2) * Box(tw, tt, th)
+    for dia, z in (p["tether_hole"], p["weight_hole"], p["shear_hole"]):
+        tang = tang - ycyl(dia / 2, -10, 10, X_POLE, z)
+    tang = break_edges(tang - bar, 0.5)
+    out.append(part("Tang, 6 x 28 flat, three holes", T * tang, GALV, bom=1))
+    for sy in (+1, -1):
+        bead = arc_weld(rb + 0.6, 1.8, (R, sy * (tt / 2 + 1.0), 0), (0, 1, 0),
+                        Pos(p["tang_x0"] + 50, 0, 0) * Box(100, 40, 40))
+        out.append(part(f"Weld, Tang to Rider ring bar ({'+' if sy > 0 else '-'}Y face)", T * bead, GALV, kind="weld", bom=1))
+    # hinge bolt set M8 x 30 through the two hinge ears (+Y), head on the swinging side
+    y_h = R + p["ear_hole_r"]
+    grip = 2 * (g + et)
+    for nm, sh in cp.hex_bolt_set(8, grip):
+        out.append(part(f"Hinge {nm}", T * Pos(-(g + et), y_h, 0) * Rot(0, -90, 0) * sh, SS, kind="fastener", bom=2))
+    out += [dict(q, shape=T * q["shape"]) for q in _clevis(8, grip, (-(g + et), -y_h, 0), "x+", "Gate", 3)]
+    return out
+
+
+def _pole_head_parts(p=PARAMS, at=(0, 0, 0), lock=True):
+    cw, ct = p["cheek"]
+    z0, z1 = p["cheek_z"]
+    gi = p["cheek_gap"] / 2
+    T = Pos(*at)
+    out = []
+    for sy in (+1, -1):
+        c = Pos(X_POLE, sy * (gi + ct / 2), (z0 + z1) / 2) * Box(cw, ct, z1 - z0)
+        c = c - ycyl(p["shear_hole"][0] / 2, -20, 20, X_POLE, p["shear_hole"][1])
+        out.append(part(f"Pole head fork cheek {'+' if sy > 0 else '-'}Y, 6 x 30 flat", T * break_edges(c, 0.5), GALV, bom=4))
+        out.append(part(f"Weld, fork cheek {'+' if sy > 0 else '-'}Y to end plate",
+                        T * weld_on((X_POLE - 12, sy * (gi + ct), z1), (1, 0, 0), 24, 3.0, (0, sy, 0), (0, 0, -1)),
+                        GALV, kind="weld", bom=4))
+    od, wall, L = p["socket"]
+    zp = z1 + p["plate_t"]
+    plate = break_edges(zcyl(od / 2, z1, zp, X_POLE), 0.5)
+    out.append(part("Pole head end plate, 6 mm disc", T * plate, GALV, bom=4))
+    sock = ztube(od / 2, od / 2 - wall, zp, zp + L, X_POLE)
+    sock = sock - ycyl(p["lock_d"] / 2 + 0.25, -30, 30, X_POLE, zp + p["head_pin_up"])
+    out.append(part("Pole head socket, 38 x 3 tube", T * sock, GALV, bom=4))
+    out.append(part("Weld, socket to end plate", T * arc_weld(od / 2, 2.0, (X_POLE, 0, zp), (0, 0, 1)), GALV, kind="weld", bom=4))
+    if lock:
+        out += [dict(q, shape=T * q["shape"]) for q in _clevis(p["lock_d"], 2 * (od / 2), (X_POLE, -od / 2, zp + p["head_pin_up"]), "y+", "Head lock", 9)]
+    return out
+
+
+def _shear_pin_part(p=PARAMS, at=(0, 0, 0)):
+    return part("Shear pin, 2 mm soft aluminium", Pos(*at) * chamfer_ends(shear_pin(p), 0.2), ALU, kind="made", bom=5)
+
+
+def _pole_parts(p=PARAMS):
+    d = derived(p)
+    out = []
+    for i, s in enumerate(pole_sections(p)):
+        out.append(part(f"Pole section {i + 1}, 32 x 2 aluminium tube", s, ALU, bom=6))
+    od_s = p["sleeve"][0] / 2
+    for i, s in enumerate(sleeves(p)):
+        out.append(part(f"Joint sleeve {i + 1}, 38 x 2.8 aluminium tube", s, ALU, bom=7))
+        jz = d["joints"][i]
+        out += _clevis(p["lock_d"], 2 * od_s, (X_POLE, -od_s, jz + p["sleeve_pin_up"]), "y+", f"Joint {i + 1} lock", 9)
+    ri = p["pole"][0] / 2 - p["pole"][1]
+    for i, jz in enumerate(d["joints"]):
+        z = jz - p["rivet_down"]
+        for sy in (+1, -1):
+            a, b = sy * (ri - 1.0), sy * od_s
+            shank = ycyl(p["rivet_d"] / 2, min(a, b), max(a, b), X_POLE, z)
+            hy0, hy1 = sorted((sy * od_s, sy * (od_s + 1.5)))
+            head = break_edges(ycyl(4.75, hy0, hy1, X_POLE, z), 0.4)
+            out.append(part(f"Blind rivet 4.8 mm, joint {i + 1} {'+' if sy > 0 else '-'}Y", shank + head, SS,
+                            kind="fastener", bom=8))
+    out.append(part("Grip cap, rubber", break_edges(grip_cap(p), 1.0), "epdm", kind="bought", bom=10))
+    return out
+
+
+def _tether_parts(p=PARAMS):
+    out = [part("Tether cord, bowline through the tang", tether_knot(p), "rope", kind="bought", bom=11)]
+    x, y, z = WINDER_AT
+    out.append(part("Tether cord, wound on the float winder", Pos(x, y, z) * Rot(0, 90, 0) * winder_cord(p), "rope",
+                    kind="bought", bom=11))
+    out.append(part("Float winder, closed-cell foam", Pos(x, y, z) * Rot(0, 90, 0) * break_edges(float_winder(p), 2.0),
+                    "insulated_white", kind="made", bom=12, color="#F28C28"))
+    body = zcyl(7.0, 0, 70) - zcyl(6.0, 1.0, 71)
+    out.append(part("Spare pin tube, polyethylene vial", Pos(x + 50, 70, z - 40) * body, "hdpe_natural", kind="bought", bom=13))
+    out.append(part("Spare pin tube cap", Pos(x + 50, 70, z - 40) * break_edges(zcyl(8.0, 70, 82), 1.0), "hdpe_natural",
+                    kind="bought", bom=13))
+    return out
+
+
+def _weight_parts(p=PARAMS, at=WEIGHT_AT):
+    cw, ct = p["cheek"]
+    z0, z1 = p["wcheek_z"]
+    gi = p["cheek_gap"] / 2
+    T = Pos(at[0] - X_POLE, at[1], at[2])
+    out = [part("Jigging weight, 50 mm bar", T * Pos(X_POLE, 0, z1) * cp.round_bar(p["weight_d"], p["weight_L"], 1.5), GALV, bom=14)]
+    for sy in (+1, -1):
+        c = Pos(X_POLE, sy * (gi + ct / 2), (z0 + z1) / 2) * Box(cw, ct, z1 - z0)
+        c = c - ycyl(p["lock_d"] / 2 + 0.25, -20, 20, X_POLE, p["weight_hole"][1])
+        out.append(part(f"Jigging weight cheek {'+' if sy > 0 else '-'}Y, 6 x 30 flat", T * break_edges(c, 0.5), GALV, bom=14))
+        out.append(part(f"Weld, cheek {'+' if sy > 0 else '-'}Y to Jigging weight",
+                        T * weld_on((X_POLE - 12, sy * (gi + ct), z1), (1, 0, 0), 24, 3.0, (0, sy, 0), (0, 0, -1)),
+                        GALV, kind="weld", bom=14))
+    out += [dict(q, shape=T * q["shape"]) for q in
+            _clevis(p["lock_d"], 2 * (gi + ct), (X_POLE, -(gi + ct), p["weight_hole"][1]), "y+", "Jigging weight lock", 9)]
+    return out
+
+
+def crutch_part_list(p=PARAMS, at=CRUTCH_AT, gunwale_t=None):
+    """Gunwale crutch [15, 16, 17] as parts: saddle, cheeks, roller, washers, M12 axle bolt and nut, clamp nut,
+    clamp screw (rod, pad, T-handle) and the welds. Own frame as crutch_frame(), moved to `at`."""
+    L, wi, leg, t = p["saddle"]
+    cwid, ch = p["ccheek"]
+    od, rl, bore = p["roller"]
+    za = t + p["axle_z"]
+    xc = rl / 2 + 2.0 + t / 2
+    T = Pos(*at)
+    out = []
+    web = Pos(0, 0, t / 2) * Box(L, wi + 2 * t, t)
+    legs = [Pos(0, sy * (wi / 2 + t / 2), -leg / 2 + t / 2) * Box(L, t, leg + t) for sy in (+1, -1)]
+    sad = web + legs[0] + legs[1]
+    sad = sad - ycyl(5.5, -wi / 2 - t - 1, -wi / 2 + 1, 0, p["clamp_z"])
+    out.append(part("Crutch saddle, 4 mm plate bent to a U", T * break_edges(sad, 1.0), GALV, bom=15))
+    for sx in (+1, -1):
+        c = Pos(sx * xc, 0, t + ch / 2) * Box(t, cwid, ch) - xcyl(6.5, -80, 80, 0, za)
+        out.append(part(f"Crutch cheek {'+' if sx > 0 else '-'}X, 4 mm plate", T * break_edges(c, 0.8), GALV, bom=15))
+        for face in (+1, -1):
+            out.append(part(f"Weld, Crutch cheek {'+' if sx > 0 else '-'}X to saddle ({'outer' if face == sx else 'inner'})",
+                            T * weld_on((sx * xc + face * t / 2, -cwid / 2 + 6, t), (0, 1, 0), cwid - 12, 3.0, (face, 0, 0), (0, 0, 1)),
+                            GALV, kind="weld", bom=15))
+    rol = xcyl(od / 2, -rl / 2, rl / 2, 0, za) - xcyl(bore / 2, -rl, rl, 0, za)
+    out.append(part("Crutch roller, HDPE rod bored 13 mm", T * break_edges(rol, 1.5), "hdpe_natural", bom=16))
+    for sx in (+1, -1):
+        w = xcyl(12.0, sx * rl / 2, sx * (rl / 2 + 2.0), 0, za) - xcyl(6.5, -rl, rl, 0, za)
+        out.append(part(f"Crutch roller washer 24 x 2 {'+' if sx > 0 else '-'}X", T * w, GALV, kind="fastener", bom=16))
+    xo = rl / 2 + 2.0 + t
+    out.append(part("Crutch axle M12 x 110 hex bolt (ISO 4017)", T * Pos(-xo, 0, za) * Rot(0, -90, 0) * cp.hex_bolt(12, 110),
+                    "zinc_plated", kind="fastener", bom=16))
+    out.append(part("Crutch axle M12 nyloc nut", T * Pos(xo, 0, za) * Rot(0, 90, 0) * cp.hex_nut(12), "zinc_plated",
+                    kind="fastener", bom=16))
+    y_leg_out = -wi / 2 - t
+    out.append(part("Clamp nut M10, welded to the saddle", T * Pos(0, y_leg_out, p["clamp_z"]) * Rot(90, 0, 0) * cp.hex_nut(10),
+                    GALV, bom=15))
+    out.append(part("Weld, Clamp nut to Crutch saddle", T * arc_weld(8.6, 1.5, (0, y_leg_out - 0.8, p["clamp_z"]), (0, 1, 0)),
+                    GALV, kind="weld", bom=15))
+    gt = gunwale_t if gunwale_t is not None else p["gunwale"][1]
+    y_pad = wi / 2 - gt
+    y_end = y_leg_out - 30
+    rod = Pos(0, y_end, p["clamp_z"]) * Rot(-90, 0, 0) * cp.round_bar(10.0, (y_pad - 5) - y_end, 0.5)
+    out.append(part("Clamp screw, M10 threaded rod", T * rod, GALV, bom=17))
+    pad = break_edges(ycyl(15.0, y_pad - 5, y_pad, 0, p["clamp_z"]), 1.0)
+    out.append(part("Clamp pad, 5 mm disc", T * pad, GALV, bom=17))
+    handle = Pos(0, y_end - 4, p["clamp_z"]) * Rot(0, 90, 0) * Pos(0, 0, -35) * cp.round_bar(8.0, 70, 0.8)
+    out.append(part("Clamp T-handle, 8 mm bar", T * handle, GALV, bom=17))
+    out.append(part("Weld, Clamp pad to screw", T * ring_weld(5.0, 2.5, (0, y_pad - 5, p["clamp_z"]), (0, -1, 0)),
+                    GALV, kind="weld", bom=17))
+    out.append(part("Weld, Clamp T-handle to screw", T * arc_weld(5.2, 1.5, (0, y_end + 0.5, p["clamp_z"]), (0, 1, 0)),
+                    GALV, kind="weld", bom=17))
+    return out
+
+
+def _hook_parts(p=PARAMS, at=HOOK_AT):
+    tw, tt, _ = p["tang"]
+    z0, z1 = p["hook_flat_z"]
+    T = Pos(at[0] - X_POLE, at[1], at[2])
+    flat = Pos(X_POLE, 0, (z0 + z1) / 2) * Box(tw, tt, z1 - z0)
+    flat = flat - ycyl(p["tether_hole"][0] / 2, -10, 10, X_POLE, p["hook_tether_z"])
+    flat = flat - ycyl(p["shear_hole"][0] / 2, -10, 10, X_POLE, p["shear_hole"][1])
+    R, zc, zt, d = p["hook_R"], p["hook_shank_z"], p["hook_tip_z"], p["hook_bar_d"]
+    xs, xt, zb = X_POLE, X_POLE - 2 * R, zc - R
+    bar = bent_bar([(xs, 0, z0), (xs, 0, zb), (xt, 0, zb), (xt, 0, zt)], d, R - 0.01)
+    return [part("Hook head flat, 6 x 28, two holes", T * break_edges(flat, 0.5), GALV, bom=21),
+            part("Hook head J, 12 mm bar bent R30", T * chamfer_ends(bar, 1.0), GALV, bom=21),
+            part("Weld, Hook head J to flat", T * ring_weld(d / 2, 3.0, (xs, 0, z0), (0, 0, -1)), GALV, kind="weld", bom=21)]
+
+
+def option_a(p=PARAMS):
+    """Option A, the current design (SMR-DDR-002, SMR-DDR-003): the kit in its general arrangement layout,
+    the tool assembled and standing on its ring, the crutch, float winder, jigging weight and hook head beside."""
+    g = lambda parts, grp: [dict(q, group=grp) for q in parts]   # noqa: E731  sub-assembly, read by product_model.py
+    teth = _tether_parts(p)
+    return (g(_ring_parts(p) + _pole_head_parts(p) + [_shear_pin_part(p)] + _pole_parts(p) + teth[:1], "tool")
+            + g(teth[1:], "winder") + g(_weight_parts(p), "weight") + g(crutch_part_list(p), "crutch") + g(_hook_parts(p), "hook"))
+
+
+def components(option=CHOSEN):
+    if option == "A":
+        return option_a()
+    import smr_options
+    return {"B": smr_options.option_b, "C": smr_options.option_c}[option]()
 
 
 # ------------------------------------------------------------------ exports

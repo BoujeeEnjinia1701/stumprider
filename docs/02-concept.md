@@ -3,9 +3,9 @@ doc_id: SMR-PRC-001
 title: StumpRider design precis
 project: StumpRider
 doc_type: Precis
-version: "0.4"
+version: "0.6"
 status: Draft
-date: '2026-10-03'
+date: '2026-10-25'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,6 +25,14 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: Amish's decisions of 2026-10-03 (SMR-DDR-003); hook head, small-canoe rule, carried kit, bamboo local variant; figures from SMR-CAL-001 v0.2
+- version: "0.5"
+  date: '2026-10-24'
+  author: Amish Chadha
+  change: "Kit 1.9.1 upgrade: this precis describes option A of the concept options SMR-OPT-001 (selection proposed, awaiting Amish); hook head J of 12 mm bar (SMR-DEC-001 F1); dynamic heel item O6; figures from SMR-CAL-001 v0.3; model detailed to D3 (cad/fidelity.json)"
+- version: "0.6"
+  date: '2026-10-25'
+  author: Amish Chadha
+  change: "Amish's decisions of 2026-10-25 (SMR-DEC-001 O6 to O9) written in; O10 back with Amish; bamboo local variant USD 66.90"
 ---
 
 # StumpRider design precis
@@ -35,7 +43,9 @@ Frees gillnets snagged on submerged trees from the canoe so children are not sen
 
 *Figure 1. The kit (concept render, CONCEPT, NOT FOR FABRICATION).*
 
-> **Safety:** StumpRider exists so that nobody enters the water. It must never be presented as a reason to keep children on boats, and it never replaces a life jacket. Working a snag pulls the canoe over; the shear pin breaks before the pull can heel the design canoe more than about 4 deg, but small dugouts are not covered (see Safety). Stop and cut the net rather than risk a capsize.
+> **Safety:** StumpRider exists so that nobody enters the water. It must never be presented as a reason to keep children on boats, and it never replaces a life jacket. Working a snag pulls the canoe over; the shear pin breaks before a steady pull can heel the design canoe more than about 4 deg (a sudden jerk about 6.5 deg, so lift steadily), but small dugouts are not covered (see Safety). Stop and cut the net rather than risk a capsize.
+
+This precis describes option A, the rider ring on a shear-pin pole, of the concept options in SMR-OPT-001. It is the design carried since TRL 2; its selection over options B (line-riding knocker weight) and C (grapnel cross-pull) was chosen by Amish on 2026-10-25 (SMR-DDR-005, SMR-DEC-001 O7). Its claims are checked in the STEM check SMR-STM-001.
 
 ## How it works
 
@@ -64,7 +74,7 @@ The crew pulls the net line up over the gunwale crutch and holds it taut above t
 | 15 | Gunwale crutch frame | Steel saddle clamped on the gunwale, with cheeks for the roller | Made: bent, welded, galvanised |
 | 16 | Crutch roller and axle | HDPE roller on an M12 bolt; the net line runs over it | Made and bought |
 | 17 | Crutch clamp screw | M10 screw with a pad; clamps gunwales 30 to 60 mm thick | Made |
-| 21 | Hook head | 10 mm steel J hook on a flat that pins into the same fork; pulls a wrapped net back round the branch | Made: bent, welded, galvanised |
+| 21 | Hook head | 12 mm steel J hook (the ring's stock, SMR-DEC-001 F1) butt welded to a flat that pins into the same fork; pulls a wrapped net back round the branch | Made: bent, welded, galvanised |
 | V1, V2 | Bamboo local variant pole | Three treated bamboo culms and two steel ferrules in place of lines 6, 7, 8 and 10 (`bom/bom-bamboo-variant.csv`) | Made |
 
 ## Key design choices
@@ -99,9 +109,10 @@ All from SMR-CAL-001 (`docs/04-calcs/sizing.py`, results in `docs/04-calcs/resul
 | Ring depth reached with the pole | 3.2 m | Pole 20 deg off vertical, operator kneeling |
 | Tether reach, jigging | 8 m | 10 m cord, 2 m kept above the water |
 | Pole buckling factor | 2.2 | Euler, 4.35 m, pinned ends, against 347 N |
-| Carried kit | 4.28 kg aluminium prototype; 3.89 kg bamboo local variant | Crutch on the canoe, weight at the landing; whole kit 6.78 kg |
+| Carried kit | 4.34 kg aluminium prototype; 3.95 kg bamboo local variant | Crutch on the canoe, weight at the landing; whole kit 6.83 kg |
+| Peak heel under a sudden jerk | 6.5 deg kneeling | Roll period 1.06 s, pull rising in 0.25 s; over the 5 deg static limit; ruled out by the steady-lift rule and measured at TRL 4 (O6, decided 2026-10-25) |
 | Bamboo pole buckling factor | 1.5 | E 15 GPa; culms chosen by a bend test |
-| Parts cost of one kit | USD 95.50 aluminium prototype; USD 54.90 bamboo local variant | Prototype prices; variant with crutch and weight shared by five canoes |
+| Parts cost of one kit | USD 95.50 aluminium prototype; USD 66.90 bamboo local variant | Prototype prices; variant with its own crutch, jigging weight shared by five canoes |
 
 ## Patent design-arounds
 
@@ -131,4 +142,4 @@ This design is published as an open engineering reference. It is not certified e
 
 ## Open questions
 
-Open questions are kept in the design decisions register (SMR-DEC-001): R1, R3, R7 and R10 were decided by Amish on 2026-10-03; one new question on the aluminium prototype's carried mass is open, with the items to confirm when parts are bought.
+Open questions are kept in the design decisions register (SMR-DEC-001): R1, R3, R7 and R10 were decided by Amish on 2026-10-03 and the aluminium prototype's carried mass on 2026-10-04. O6 to O9 from the kit 1.9.1 upgrade were decided on 2026-10-25 (steady-lift rule with 5 deg as the static limit, option A, a crutch on every canoe, a measured righting-moment criterion). O10, the hook head's tip-leg case, is open again: the approved gusset was found not to reach the straight shank.

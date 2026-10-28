@@ -1,5 +1,42 @@
 # Review note: StumpRider
 
+## Session 2026-10-25: decisions
+
+Amish Chadha (owner), 2026-10-25 12:43 CT, after a report listing each repo's proposed decisions and recommendations: "i approve of your recommendations". Every open decision in SMR-DEC-001 carried a recommendation (O6 to O10), so each is recorded as decided with the option recommended and carried through; O10 was stopped while carrying it through (below). Record: `docs/decisions/0006-decisions-2026-10-25.md` (SMR-DDR-006); register SMR-DEC-001 v0.5. Brief: `/home/claude/fleet/DECISIONS.md`.
+
+### Decisions now decided
+
+| # | Decision | Option |
+| --- | --- | --- |
+| O6 | Heel limit for a quick pull (PR-003) | A: keep the 2.0 mm pin; 5 deg is the static limit; "lift steadily, never jerk" in the operating rules and on the tag; the TRL 4 heel test measures the roll period and jerk peak |
+| O7 | Concept selection | A: rider ring on a shear-pin pole; `concept_chosen: A`; SMR-DDR-005 accepted. The eligibility rule offered beside the options was not part of the recommendation and is not adopted |
+| O8 | Crutch counted two ways | A: each canoe keeps its own crutch, only the jigging weight is shared |
+| O9 | Canoe eligibility (PR-003) | A: keep the 7 m, three-crew rule as a screen; add displacement x GM of at least about 260 kg m, with a margin, at the TRL 4 heel test |
+
+### What changed
+
+- **O6.** PR-003 target now reads "static heel"; build plan stop S4a is the steady-lift rule; check 7 records the jerk peak, with a 1.7 mm pin only if it passes 5 deg; PR-013's tag carries the rule. STEM S7 restated and now plausible. No cost or model change.
+- **O7.** `project.yaml` `concept_chosen: A`; SMR-DDR-005 v0.2 accepted; SMR-OPT-001 v0.2, SMR-PRC-001 v0.6, SMR-PLN-001 v0.2 and README updated. The model's `CHOSEN` was already A.
+- **O8.** `docs/04-calcs/sizing.py` V7 now counts only the jigging weight and half the USD 6 galvanising share (estimate): saving USD 5.60 a kit (USD 17.60 before); bamboo local variant USD 66.90 a kit [V8] (USD 54.90). PR-010 still not met (USD 40 target); carried mass unchanged, 3.95 kg (PR-007 met). `bom/bom-local-variant.csv` lines 15 to 17 now one per kit, line 18 USD 9.60 (estimate).
+- **O9.** PR-003 requirement wording adds the measured criterion; build plan check 7 and stop S4 apply it; CAL s3 records it.
+- **Documents.** SMR-CAL-001 v0.4, SMR-STM-001 v0.2 (15 within, 11 plausible, 1 failing), SMR-PRS-001 v0.7, RTM regenerated, SMR-BLD-001 v0.4, SMR-FEA-001, SMR-RSK-001, SMR-MKT-001 v0.2. No change to the model, drawings or the aluminium BOM; value-engineering target USD 2,000, prototype run USD 299.50 (unchanged); `budget_usd` unchanged.
+
+### Stopped while carrying through: O10
+
+Amish approved the recommendation (C, a small gusset outside the bend of the hook head's J, about 0.02 kg). Carrying it through, the calculation found that with the bight on the tip leg the same moment, the load times 60 mm, runs through the whole straight shank between the bend and the flat, where the factor is 1.87 (new result S13a in `docs/04-calcs/sizing.py`), under the 2 x rule of PR-012. A gusset at the bend lifts only the bend (1.58 there); a gusset that reaches the flat would weigh about 0.06 to 0.10 kg (estimate), more than the 0.05 kg left under PR-007's 4.0 kg, which is the trade the recommendation was chosen to avoid. So the change was not made. O10 is open again in SMR-DEC-001 with the options restated: A accept the tip-leg case (no cost), B 14 mm bar (bend about 2.3, shank about 3.0, about 0.09 kg, PR-007 fails), D a gusset from the bend to the flat (PR-007 fails).
+
+### Decisions still open
+
+- **O10**, as above.
+
+### Safety
+
+The pin, the 5 deg static limit, the 7 m rule, kneeling, slackening the line, life jackets and "lift steadily, never jerk" are the rules; nothing puts a person in the water. The hook head does not yield before the pin breaks in any case (factor above 1), so O10 is a margin question, not a failure.
+
+### Recommended next step
+
+Amish decides O10 again. Then the coordinator renders the options picture and product views. TRL 4 (heel test with the measured criterion, pin calibration) stays on hold under the portfolio cap.
+
 ## Session 2026-09-30: scaffolded
 
 ### What was done
@@ -198,3 +235,90 @@ Nothing new.
 ## 2026-10-04: photoreal renders redone after the round-2 and round-3 decisions
 
 Views: hero, exploded, detail; cards regenerated; image_qc passes and `render.py --check` has no FAIL.
+
+## Session 2026-10-24: kit 1.9.1 upgrade
+
+Run under Amish's instructions of 2026-10-24 ("I want detailed TRL3 CAD - and in fact want to ensure the CAD is detailed across all TRLs", "Detail every option", "Kit 1.9.1 rollout - proceed to rollout across the other repos") and his standing instruction of 2026-10-23 on STEM check failures. The coordinator installed kit 1.9.1 (`.kit/`, `CLAUDE.md`, `.claude/commands/`); this session did `/upgrade-1.8` and `/upgrade-1.9` for this repo only.
+
+### What was added
+
+- STEM check: `docs/01b-stem-check.md` (SMR-STM-001 v0.1) and `docs/04-calcs/stem_check.py` (writes `docs/04-calcs/stem_results.csv` and the claims table).
+- Concept options: `docs/02a-concept-options.md` (SMR-OPT-001 v0.1); concept selection record `docs/decisions/0005-concept-selection.md` (SMR-DDR-005, proposed).
+- Requirements: `docs/03a-user-requirements.md` (SMR-URS-001, 11 user requirements); `docs/03-requirements.md` is now SMR-PRS-001 v0.6 (R1 to R10 migrated to PR-001 to PR-010 with "Was", PR-011 to PR-013 added from existing rules); `docs/03b-traceability.md` (SMR-RTM-001, generated, 0 gaps).
+- Pipeline documents: `docs/07-regulatory.md` (REG), `docs/08-feasibility.md` (FEA), `docs/09-risk.md` (RSK with preliminary hazard analysis and design FMEA), `docs/10-market.md` (MKT), `docs/11-plan.md` (PLN). PRB v0.3 gained the users-and-needs and stakeholders tables.
+- Detailed CAD: `cad/src/model.py` now has the kit 1.9 interface (`PARAMS`, `OPTIONS`, `PRINCIPLES`, `CHOSEN = "A"`, `OPTION_VIEWS`, `ALLOWED_CONTACTS`, `components(option)`). Option A is the TRL 3 design, unchanged in every dimension except F1, broken into the parts a smith makes, with every bolt, nut, washer, clevis pin, R-clip and rivet and the weld beads, each with its BOM line. Options B and C are in `cad/src/smr_options.py`; repo helpers in `cad/src/smr_parts.py`. The legacy functions that `sizing.py`, `sheets.py` and `build_plan_media.py` read are kept (144 of 144 constructability checks pass).
+- `cad/fidelity.json` (D3, all options pass); STEP per part of option A in `cad/step/A/` and `cad/step/A-assembly.step`, `B-assembly.step`, `C-assembly.step`; the legacy STEP and STL files re-exported (STL at 0.2 mm).
+- Drawings regenerated: SMR-DWG-001 Rev P4 (F1) and SMR-DWG-101 to 112 (SMR-DWG-111 shows the 12 mm J); build plan pictures regenerated.
+- `cad/src/product_model.py` rebuilt from `components(CHOSEN)`: RENDER_VIEWS `hero` (lake landing site: mud with water at -8 mm, ground at z = 0, a beached plank canoe with the crutch clamped on its gunwale, the kit on the mud, a 1.75 m mannequin standing on the ground, sun at 38 deg elevation and -80 deg azimuth for a camera at -55 deg), `studio` (general arrangement) and `detail` (the working end on a branch). Renders are for the coordinator.
+- Concept media regenerated from `cad/src/concept_media.py`; `media/model.glb` from the D3 parts.
+- README in the house structure; the broken Zenodo badge (it held an error message in place of an ID) replaced by the DOI badge for 10.5281/zenodo.23132236 from `CITATION.cff`.
+- `project.yaml`: `stage: P3`, `stem_check: open`, `concept_options: [A, B, C]`, `concept_chosen: A (proposed)`, `trl_evidence` with the new files.
+
+### STEM verdicts and fixes
+
+27 claims: 15 within known science, 10 plausible (need TRL 4 data), 2 fail with a fix proposed; no outright Fails. Fixed under the standing instruction (SMR-DEC-001):
+
+- **F1:** the hook head's J of 10 mm bar was 1.86 times as strong as the top of the pin band with the bight in the J, under the rule that every part but the pin is at least twice as strong. Now 12 mm bar (the ring's stock), same 30 mm bend radius (48 mm throat), butt welded to the flat with a fillet all round: factor 3.1. Hook head 0.21 to 0.26 kg; no cost change. Model, BOM line 21, SMR-DWG-001 P4, SMR-DWG-111, BLD 3.11, CAL [S11 to S14] updated.
+- **F2:** option C's grapnel tines, 12 to 14 mm (found by the independent review): factor 3.0.
+
+Sent to Amish: S7 (a quick pull held just under the pin heels the design canoe about 6.5 deg, over the 5 deg working limit; O6) and S3b (hook head with the bight on its tip leg, factor 1.58; O10).
+
+### Independent review
+
+A separate Claude session, run headless with only the STEM check, the calculation note, the PRS, `sizing.py` and its results, recomputed the numbers. It upheld the arithmetic throughout and weakened or refuted these: the pin band (1100-O at 62 MPa gives 390 N), the freeing margin (gone at a 47 N far leg), the static heel's sensitivity to the screening hydrostatics (5.1 deg at a 1.0 m beam), the missing line-tension case, the dynamic heel's load case (it peaks only if the pull is held just under the pin), the 7 m rule as a proxy, pole bending, the hook tip leg, the bamboo pole against the 2 x rule, the hinged ring, the crutch counted two ways for mass and cost, the "1.6 to 4.8" factor (2.6 to 4.8) and option C's tines. Each is acted on in SMR-STM-001 Table 3: new CAL results [H13 to H15, Q1 to Q3, F9, S15 to S17], S4 and S6 to plausible, S18 to S20 and S3b added, F2, O8 to O10. One finding was refuted: the push is capped by the pin, because the tang stops 45 mm short of the end plate.
+
+### Option scores and recommendation
+
+Weighted against SMR-URS-001 (SMR-OPT-001): A, rider ring on a shear-pin pole, 120; B, line-riding knocker weight, 134; C, grapnel cross-pull, 109. B leads by 12 % on cost and simplicity but scores 1 of 5 on freeing the net. Recommended: A (proposed, awaiting Amish, O7).
+
+### Part counts and mass per option (`cad/fidelity.json`)
+
+| Option | Parts | Made or bought | Fasteners | Welds | Mass |
+| --- | --- | --- | --- | --- | --- |
+| A, rider ring on a shear-pin pole | 77 | 36 | 22 | 19 | 7.2 kg (whole kit; foam at 120 kg/m3 in CAD) |
+| B, line-riding knocker weight | 55 | 26 | 10 | 19 | 4.5 kg |
+| C, grapnel cross-pull | 42 | 23 | 5 | 14 | 3.8 kg |
+
+### Requirements not met or at risk
+
+- PR-010 (was R10), cost: **not met**, USD 54.90 bamboo local variant and USD 95.50 aluminium prototype against USD 40.
+- PR-001 (R1), freeing: at risk (wrapped nets; margin sensitive to the far leg and friction).
+- PR-003 (R3), side pull: at risk (screening hydrostatics; quick-pull peak 6.5 deg, O6; eligibility, O9).
+- PR-007 (R7), carried mass: at risk on its 0.05 kg margin after F1 (3.95 kg bamboo variant; 4.34 kg aluminium prototype recorded).
+- PR-009 (R9), build time: at risk (8.1 h).
+- PR-012, weakest link: at risk for the hook tip leg (1.58, O10) and the bamboo pole (1.49).
+- PR-004, PR-005, PR-011: to verify at TRL 4.
+
+BOM: USD 95.50 a kit; prototype run USD 299.50 against the USD 2,000 value-engineering target (`budget_usd` unchanged).
+
+### Decisions awaiting Amish
+
+- O6: heel limit for a quick pull (recommend: keep the pin, "lift steadily" rule, measure at TRL 4).
+- O7: concept selection (recommend: option A).
+- O8: crutch on every canoe or shared (recommend: on every canoe; bamboo kit about USD 67, estimate).
+- O9: canoe eligibility by measured righting moment at the TRL 4 heel test (recommend: add it beside the 7 m rule).
+- O10: hook head tip-leg case (recommend: a small gusset outside the bend).
+- Regulatory items "to assess" in SMR-REG-001 (Fisheries Commission, Maritime Authority, liability).
+
+### Safety
+
+The pin, the heel limits, the 7 m rule, kneeling, slackening the line and life jackets are unchanged; a "lift steadily" stop (S4a) is in the build plan pending O6. The tool is never a reason to keep children on boats.
+
+### Kit bugs met
+
+- `.kit/cad_check.py` `bom_ids()` reads BOM line numbers only from the leading digits of the `item` column, and ignores a separate `line` column; this repo's BOM had the number in `line`, so every BOM line would have failed as missing. Worked around in the repo by prefixing each item name with its line number (the `line` column is kept for `sizing.py`).
+- `.kit/options.py` tessellates every part at 0.05 mm; a fused eye bolt (filleted collar plus torus) returned a face with no triangulation (`'NoneType' object has no attribute 'NbNodes'`) though it exported to STEP. Worked around in the model (the eye sunk 0.5 mm into the collar); the kit could skip or retry a part that fails to tessellate.
+- `.kit/concept.py` `render_all` with the 77 D3 parts ran for over 35 minutes on this machine and was stopped; the matplotlib media are drawn from one shape per BOM line (the same geometry) and only the web model uses the D3 parts.
+- `.kit/options.py --export` copies the scenes as `opt-<key>.npz` without the repo slug, so a shared export folder would collide between repos (the job's output names do carry the slug); exported here into a slug-named folder.
+
+### Checks run (2026-10-25, before the commit)
+
+`python3 docs/04-calcs/sizing.py` ran; `python3 docs/04-calcs/stem_check.py`: open (15, 10, 2, 0); `python3 .kit/trace.py`: up to date, 0 gaps; `python3 .kit/cad_check.py --export`: PASS at D3 for A, B and C; `python3 .kit/render.py`: all PDFs rendered; `python3 .kit/render.py --check`: no FAIL and no warnings; `python3 -m reuse lint`: compliant; no em or en dashes outside `.kit/` and `LICENSES/`; no file over 45 MB (`cad/step` is 13 MB, `media/model.glb` 3.9 MB). `python cad/src/model.py --check`: 144 of 144 constructability checks pass.
+
+### Media for the coordinator
+
+`media/options.png` is a labelled placeholder (no options picture existed before); the option scenes are exported with `python .kit/options.py --export` for the Cycles render. The product renders (`media/render-*.png`), card and social preview are from the 2026-10-04 renders and need re-rendering from the new `product_model.py` (RENDER_VIEWS hero, studio, detail).
+
+### Recommended next step
+
+Amish decides O6 to O10; then the coordinator renders the options picture and the product views. TRL 4 stays on hold under the portfolio cap.

@@ -1,6 +1,8 @@
 """StumpRider concept media (TRL 3, constructable design of SMR-DDR-002), generated from the model.
 
-Run from the repo root:  python cad/src/concept_media.py
+Run from the repo root:  python cad/src/concept_media.py [web|exploded]
+Kit 1.9: the 3D web model (web) is built from the D3 parts of components(CHOSEN) in cad/src/model.py; run it
+last, on its own, so media/model.glb keeps its web tessellation.
 Takes the kit from cad/src/model.py and renders the media set with .kit/concept.py:
 media/hero.png (the tool standing beside a 1.75 m person, with the crutch, float winder and
 jigging weight), media/exploded.png (the working end pulled apart, numbers match bom/bom.csv),
@@ -40,9 +42,21 @@ def R():
     return lambda t: float(rows[t]["value"])
 
 
-def kit_parts():
-    c = M.build_components(P)
-    return [Part(name, c[key], COLORS[key], num) for key, (num, name) in M.BOM.items()]
+GROUP_COLORS = {1: COLORS["ring"], 2: COLORS["hinge"], 3: COLORS["gate"], 4: COLORS["head"], 5: COLORS["shear"],
+                6: COLORS["poles"], 7: COLORS["sleeves"], 8: COLORS["rivets"], 9: COLORS["locks"], 10: COLORS["cap"],
+                11: COLORS["tether"], 12: COLORS["winder"], 13: COLORS["spares"], 14: COLORS["weight"],
+                15: COLORS["cframe"], 16: COLORS["roller"], 17: COLORS["clamp"], 21: COLORS["hook"]}
+
+
+def kit_parts(detail=False):
+    """The kit, one shape per BOM line (legacy grouping, quick to draw with matplotlib), or with detail=True the D3
+    parts of the chosen option (components(CHOSEN)), coloured by BOM line, for the 3D web model. The same geometry
+    either way; the D3 list splits it into parts and adds the fasteners and weld beads."""
+    if not detail:
+        c = M.build_components(P)
+        return [Part(name, c[key], COLORS[key], num) for key, (num, name) in M.BOM.items()]
+    return [Part(q["name"], q["shape"], GROUP_COLORS.get(q["bom"], q["color"]), q["bom"])
+            for q in M.components(M.CHOSEN) if q["kind"] != "context"]
 
 
 def working_end(explode=True):
@@ -84,7 +98,7 @@ def web():
     orig = bd.export_gltf
     bd.export_gltf = functools.partial(orig, linear_deflection=1.0, angular_deflection=0.35)
     try:
-        return K.export_web_model(kit_parts(), "media", title=f"{PROJECT}: {TITLE}")
+        return K.export_web_model(kit_parts(detail=True), "media", title=f"{PROJECT}: {TITLE}")
     finally:
         bd.export_gltf = orig
 
@@ -92,8 +106,9 @@ def web():
 def main():
     if "exploded" in sys.argv:
         return exploded_only()
+    if "web" in sys.argv:
+        return web()
     r = R()
-    web()
     render_all(
         kit_parts(), project=PROJECT, title=f"{TITLE} concept", dwg_no="SMR-DWG-010",
         key_figures=[

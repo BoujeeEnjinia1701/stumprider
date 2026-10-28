@@ -8,6 +8,8 @@ so the sizes here are the sizes in the STEP files, drawings and build plan.
 Screening estimates for a paper proof of concept. They do not replace the CalRig pin calibration,
 the canoe heel test or the staged-snag trials, which are TRL 4 work.
 Software license MIT, see LICENSE-SOFTWARE.
+2026-10-25: Amish's decisions O6 to O9 (SMR-DEC-001): V7 and V8 for a crutch on every canoe with only the jigging weight
+shared (O8); S13a, the hook head's straight shank in the tip-leg case, found while carrying out O10.
 """
 import csv
 import math
@@ -35,6 +37,10 @@ A = {
     "fy_steel": 235.0,          # MPa, S235 mild steel
     "tau_ss_pin": 300.0,        # MPa, stainless clevis pins (shear)
     "bear_al": 320.0,           # MPa, bearing of 6063-T6 at a pin hole
+    "fy_al": 214.0,             # MPa, 0.2 % proof of 6063-T6 (handbook typical)
+    "tau_ss_bolt": 300.0,       # MPa, stainless A2 bolt in shear (as the clevis pins)
+    "hand_N": 200.0,            # N, each hand of a kneeling operator pushing sideways (assumed, A13)
+    "hand_span_m": 0.6,         # m, between the operator's hands on the pole (A13)
     "rivet_kN": 2.9,            # 4.8 mm stainless blind rivet, shear, catalogue typical
     # design canoe (Volta plank canoe, paddled, operator kneeling at the bow), assumed
     "canoe": {"name": "design canoe", "L": 8.0, "B": 1.10, "depth": 0.60, "k_I": 0.050, "Cb": 0.45,
@@ -47,6 +53,8 @@ A = {
     "hands_kneel": 0.30,        # m above the gunwale, kneeling
     "hands_stand": 0.85,        # m above the gunwale, standing
     "heel_limit": 5.0,          # deg, safe working heel at the top of the pin band (conservative)
+    "k_roll_B": 0.40,           # roll radius of gyration as a share of the waterline beam (screening value, A11)
+    "jerk_rise_s": 0.25,        # rise time of a sudden two-handed jerk on the pole (assumed, A12)
     "crew_hold_N": 100.0,       # crew tension on the net line while the ring is run down
     "crew_slack_N": 30.0,       # crew tension while the operator lifts (operating rule)
     "net_leg_N": 20.0,          # tension in the far leg of the net (its own drag and weight in water)
@@ -147,6 +155,11 @@ def canoe(cn, F, tag0, excluded=False):
         F5 = (k * math.sin(math.radians(A["heel_limit"])) - A["crew_slack_N"] * crew_arm) / arm(hg)
         res[pose] = (phi, F5)
     immerse = math.degrees(math.atan(fb / cn["half_wl"]))
+    # dynamic heel (kit 1.8 STEM check, SMR-STM-001 S6): a pull that rises in tr seconds on an undamped roll
+    # oscillator of period T overshoots the static heel by 1 + |sin(pi tr / T)| / (pi tr / T)
+    T_roll = 2 * math.pi * A["k_roll_B"] * cn["B"] / math.sqrt(g * GM)
+    xr = math.pi * A["jerk_rise_s"] / T_roll
+    daf = 1 + abs(math.sin(xr)) / xr
     out(f"{tag0}1", f"{cn['name']}: displacement", Ldisp, "kg")
     out(f"{tag0}2", f"{cn['name']}: metacentric height GM", GM, "m")
     out(f"{tag0}3", f"{cn['name']}: freeboard; heel that puts the gunwale under", fb * 1000, "mm")
@@ -159,6 +172,22 @@ def canoe(cn, F, tag0, excluded=False):
     out(f"{tag0}6", f"{cn['name']}: heel when the pin breaks at the top of its band, standing", res["standing"][0], "deg", "R3", st)
     out(f"{tag0}7", f"{cn['name']}: pole pull that heels the canoe 5 deg, kneeling", res["kneeling"][1], "N")
     out(f"{tag0}8", f"{cn['name']}: pole pull that heels the canoe 5 deg, standing", res["standing"][1], "N")
+    out(f"{tag0}9", f"{cn['name']}: natural roll period (radius of gyration 0.40 B)", T_roll, "s")
+    out(f"{tag0}10", f"{cn['name']}: dynamic factor for a jerk rising in {A['jerk_rise_s']} s", daf, "x")
+    dyn = math.degrees(math.asin(min(1.0, math.sin(math.radians(res["kneeling"][0])) * daf)))
+    out(f"{tag0}11", f"{cn['name']}: peak heel when a jerk at the top of the pin band breaks the pin, kneeling", dyn, "deg",
+        "R3", "outside the 7 m rule (SMR-DDR-003)" if excluded else ("met" if dyn <= A["heel_limit"] else "over 5 deg, ruled out by the steady-lift rule (5 deg is the static limit, O6); measured at TRL 4"))
+    out(f"{tag0}12", f"{cn['name']}: peak heel as a share of the heel that puts the gunwale under", dyn / immerse * 100, "%")
+    res["dynamic"] = dyn
+    # independent review (2026-10-24): if the pin breaks at the top of the ramp the load is gone; the heel at that
+    # moment is 1 - sin(w tr) / (w tr) of static, so the 1 + |sin x| / x peak is for a quick pull held just under the pin
+    wt = 2 * math.pi * A["jerk_rise_s"] / T_roll
+    out(f"{tag0}13", f"{cn['name']}: heel at the instant a quick pull breaks the pin, as a share of the static heel", (1 - math.sin(wt) / wt) * 100, "%")
+    # combined case: the crew still holding 100 N on the line while the pin breaks at the top of its band
+    Mh = F * arm(A["hands_kneel"]) + A["crew_hold_N"] * crew_arm
+    out(f"{tag0}14", f"{cn['name']}: heel, pin at the top of its band and the crew holding 100 N, kneeling", math.degrees(math.asin(min(1.0, Mh / k))), "deg")
+    T5 = (k * math.sin(math.radians(A["heel_limit"])) - F * arm(A["hands_kneel"])) / crew_arm
+    out(f"{tag0}15", f"{cn['name']}: line tension over the crutch that, with the pin at the top of its band, heels 5 deg", T5, "N")
     return res
 
 
@@ -177,6 +206,7 @@ def freeing(F_lo):
     for tag, mu in (("F7", A["mu"][0]), ("F8", A["mu"][1])):
         f1 = A["net_leg_N"] * math.exp(mu * 2 * math.pi) + A["crew_slack_N"]
         out(tag, f"Pull to lift once the hook has worked the wrap back half a turn (one full turn left), mu {mu}", f1, "N")
+    out("F9", "Far-leg tension at which a hooked net at high friction needs the low end of the pin band", (F_lo - A["crew_slack_N"]) / math.exp(A["mu"][1] * math.pi), "N")
     f_hold = A["net_leg_N"] * math.exp(A["mu"][1] * math.pi) + A["crew_hold_N"]
     out("F6", "Pull if the crew keeps full tension while the operator lifts (hooked, high friction)", f_hold, "N")
     return rows
@@ -226,6 +256,31 @@ def strength(F_hi):
     span = P["roller"][1] + 2 * 2.0 + P["saddle"][3]
     Ma = Fa * span / 4
     out("S10", "Crutch axle bending stress at 500 N line tension (M12, grade 4.6)", Ma / (math.pi * 12 ** 3 / 32), "MPa")
+    # hook head J (SMR-DEC-001 F1): the bight seats in the bottom of the J, the hook radius off the shank axis;
+    # curved-bar inner-fibre factor (Wahl) (4C - 1) / (4C - 4), C = 2R / d; axial stress added
+    def hook_stress(dh, arm):
+        C = 2 * P["hook_R"] / dh
+        kc = (4 * C - 1) / (4 * C - 4)
+        return kc * F_hi * arm / (math.pi * dh ** 3 / 32) + F_hi / (math.pi * dh * dh / 4)
+    sh = hook_stress(P["hook_bar_d"], P["hook_R"])
+    out("S11", f"Hook head J bending stress, bight in the bottom of the J ({P['hook_bar_d']:.0f} mm bar)", sh, "MPa")
+    out("S12", "Hook head bending factor on yield (at least 2, as every other part)", A["fy_steel"] / sh, "x")
+    st = hook_stress(P["hook_bar_d"], 2 * P["hook_R"])
+    out("S13", "Hook head bending factor if the bight catches on the tip leg (twice the arm)", A["fy_steel"] / st, "x")
+    out("S14", "Hook head bending factor with the 10 mm bar of SMR-DDR-003 (before fix F1)", A["fy_steel"] / hook_stress(10.0, P["hook_R"]), "x")
+    # O10 carried through (2026-10-25): a gusset outside the bend reinforces only the bend; the straight shank above it
+    # carries the same tip-leg moment (F x 2R) without the curved-bar factor
+    d_ = P["hook_bar_d"]
+    st_sh = F_hi * 2 * P["hook_R"] / (math.pi * d_ ** 3 / 32) + F_hi / (math.pi * d_ * d_ / 4)
+    out("S13a", "Hook head straight shank between the bend and the flat, bight on the tip leg (a gusset at the bend does not reach it)", A["fy_steel"] / st_sh, "x")
+    # independent review (2026-10-24): ring as two halves pinned at hinge and gate (M = F R / 2), hinge bolt shear,
+    # and pole bending under the largest side couple a kneeling operator can apply with two hands (A13)
+    Mr2 = F_hi * P["ring_R"] / 2
+    out("S15", "Ring bending factor on yield, halves pinned at the hinge and gate (M = F R / 2)", A["fy_steel"] / (Mr2 / Zr), "x")
+    out("S16", "Hinge bolt M8 factor in single shear with the whole pull on one joint", A["tau_ss_bolt"] * math.pi * 8 ** 2 / 4 / F_hi, "x")
+    Zp = math.pi / 32 * (od ** 4 - (od - 2 * w) ** 4) / od
+    Mside = A["hand_N"] * A["hand_span_m"] * 1000
+    out("S17", "Pole bending factor on proof under the operator's largest side couple (200 N per hand, 0.6 m apart)", A["fy_al"] / (Mside / Zp), "x")
 
 
 # ------------------------------------------------------------------ 7. float
@@ -294,10 +349,12 @@ def bamboo(m, kit, by, vset):
     out("V10", "Culm bend test: largest sag at mid-span, 50 N (5 kg) hung at the middle of a 1.4 m span, for E 15 GPa", defl, "mm")
     rows = {r["line"]: r for r in csv.DictReader((ROOT / "bom" / "bom.csv").open())}
     removed = sum(float(rows[n]["qty"]) * float(rows[n]["unit_cost_usd"]) for n in ("6", "7", "8", "10"))
-    shared = (by["14"] + by["15"] + by["16"] + by["17"] + 6.0) * 0.8
-    out("V7", "Crutch and jigging weight with their galvanising, saving per kit when one set serves five canoes", shared, "USD")
+    # Amish's decision O8 of 2026-10-25 (SMR-DEC-001): each canoe keeps its own crutch; only the jigging weight is shared
+    # by five canoes, with half of the USD 6 galvanising share the crutch and weight carried before (estimate)
+    shared = (by["14"] + 3.0) * 0.8
+    out("V7", "Jigging weight with its galvanising share, saving per kit when one weight serves five canoes (crutch on every canoe, O8)", shared, "USD")
     v = kit - removed + vset - shared
-    out("V8", "Parts cost of one bamboo local variant kit, crutch and weight shared by five canoes", v, "USD",
+    out("V8", "Parts cost of one bamboo local variant kit, its own crutch, jigging weight shared by five canoes (O8)", v, "USD",
         "R10", "met" if v <= 40 else "not met")
     out("V9", "Parts cost of one aluminium prototype kit", kit, "USD", "R10", "met" if kit <= 40 else "not met")
     # new open decision (R7 and R9 on the aluminium prototype): a thinner pole wall
@@ -322,10 +379,26 @@ def pin_band():
     return F, F * (1 - A["tau_pin_band"]), F * (1 + A["tau_pin_band"])
 
 
+def sensitivity(F_hi):
+    """Static heel of the design canoe (kneeling, pin at the top of its band) with a narrower waterline beam and a
+    smaller waterplane factor (independent review, 2026-10-24); the screening hydrostatics decide the margin."""
+    import contextlib, io
+    for tag, txt, over in (("Q1", "waterline beam 1.0 m", {"B": 1.0, "half_wl": 0.50}),
+                           ("Q2", "waterplane factor 0.04 L B^3", {"k_I": 0.040}),
+                           ("Q3", "both", {"B": 1.0, "half_wl": 0.50, "k_I": 0.040})):
+        cn = dict(A["canoe"], **over)
+        with contextlib.redirect_stdout(io.StringIO()):
+            saved = list(OUT)
+            r = canoe(cn, F_hi, "X")
+            OUT[:] = saved
+        out(tag, f"Sensitivity: design canoe static heel, kneeling, pin at the top of its band, {txt}", r["kneeling"][0], "deg")
+
+
 def main():
     m, kit_mass = masses()
     F, lo, hi = pin()
     res = canoe(A["canoe"], hi, "H")
+    sensitivity(hi)
     small = canoe(A["small"], hi, "K", excluded=True)
     freeing(lo)
     reach()

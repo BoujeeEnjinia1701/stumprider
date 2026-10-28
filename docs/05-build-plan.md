@@ -3,9 +3,9 @@ doc_id: SMR-BLD-001
 title: StumpRider prototype build plan
 project: StumpRider
 doc_type: Build plan
-version: "0.2"
+version: "0.4"
 status: Draft
-date: '2026-10-03'
+date: '2026-10-25'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,6 +17,14 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: Amish's decisions of 2026-10-03 (SMR-DDR-003); hook head, bamboo local variant, crutch kept on the canoe and weight at the landing, heel tests by canoe class
+- version: "0.3"
+  date: '2026-10-24'
+  author: Amish Chadha
+  change: "Kit 1.9.1 upgrade: hook head J of 12 mm bar, butt welded (SMR-DEC-001 F1); masses after F1; check 7 also records the roll period and the peak heel under a jerk (O6); requirement numbers PR-001 to PR-013 beside the old R numbers"
+- version: "0.4"
+  date: '2026-10-25'
+  author: Amish Chadha
+  change: "Amish's decisions of 2026-10-25 (\"i approve of your recommendations\", SMR-DEC-001 O6, O9): stop S4a is the steady-lift rule; check 7 adds the measured displacement x GM criterion; S4 refers to it"
 ---
 
 # StumpRider prototype build plan
@@ -33,7 +41,7 @@ revisions:
 
 The kit is a release tool for a gillnet snagged on a drowned tree. A hinged steel ring closes round the net line and is pushed down onto the snag by a three-piece aluminium pole; the pole holds the ring by a fork and a thin aluminium shear pin that breaks before the pull can heel the canoe too far. A tether on a floating winder brings the ring back, a pinned-on weight works snags too deep for the pole, and a clamp-on crutch with a roller guides the net line over the gunwale. A hook head that fits the same fork pulls a net that has wrapped round a branch back round it. There are 18 components: eleven are made (the ring, pole head, shear pins, pole sections, sleeves, float winder, jigging weight, crutch frame, roller, clamp screw and hook head) and seven are bought (bolts, pins, rivets, cap, cord and a small tube). The steel parts are bent, cut, drilled and welded with a stick welder and then hot-dip galvanised; the aluminium parts are cut and drilled. The parts for one kit cost about USD 96 at prototype prices.
 
-The crutch stays clamped on the canoe as a fitting, and the jigging weight stays at the landing until a deep snag needs it, so the kit carried to and from the canoe weighs about 4.3 kg. A bamboo local variant (section 3.12) uses three treated bamboo culms joined by steel ferrules in place of the aluminium pole; everything else is the same, and one crutch and weight serve five canoes at a landing. It carries about 3.9 kg and its parts cost about USD 55 a kit. One bamboo pole is built alongside the aluminium kits so the two can be compared.
+The crutch stays clamped on the canoe as a fitting, and the jigging weight stays at the landing until a deep snag needs it, so the kit carried to and from the canoe weighs about 4.3 kg. A bamboo local variant (section 3.12) uses three treated bamboo culms joined by steel ferrules in place of the aluminium pole; everything else is the same, and one crutch and weight serve five canoes at a landing. It carries about 3.95 kg and its parts cost about USD 55 a kit. One bamboo pole is built alongside the aluminium kits so the two can be compared.
 
 ## 2. What changed to make it buildable
 
@@ -270,13 +278,13 @@ Sizes are in millimetres. Weld only bare steel; galvanise after all welding and 
 
 ![Making sketch: hook head](../cad/drawings/SMR-DWG-111.png)
 
-**What it is and what it is made from.** A J hook of 10 mm steel round bar welded to a short flat with the same holes as the ring's tang, so it pins into the same fork. It weighs about 0.2 kg.
+**What it is and what it is made from.** A J hook of 12 mm steel round bar (the ring's stock) butt welded to a short flat with the same holes as the ring's tang, so it pins into the same fork. It weighs about 0.26 kg. The bar was 10 mm until 2026-10-24; at 10 mm the J was less than twice as strong as the pin (SMR-DEC-001 F1).
 
 **How to make it.**
 
 1. Cut 60 of 6 x 28 flat bar. Drill a 10.5 hole 12 from one end and a 2.1 hole 50 from the same end, on the centre line.
-2. Cut about 220 of 10 round bar. Bend one end round a 50 pipe held in the vice into a J: the legs end up 60 apart, centre to centre, with a 50 gap between them, and the short leg 35 long.
-3. Weld the long leg to the flat, in line with it, running 10 up the flat's end with the 10.5 hole; weld both sides.
+2. Cut about 220 of 12 round bar. Bend one end round a 48 pipe (1.5 in pipe) held in the vice into a J: the legs end up 60 apart, centre to centre, with a 48 gap between them, and the short leg 35 long.
+3. Square the long leg's end, stand it on the flat's end with the 10.5 hole, in line with the flat, and fillet weld all round (the bar stands 3 proud of each face of the flat).
 4. Galvanise with the other steel parts.
 
 **How it fits the parts next to it.** The fork goes over the flat in place of the ring's tang, held by a calibrated shear pin; the tether's bowline is moved to the 10.5 hole so the hook comes back if the pin breaks.
@@ -401,13 +409,13 @@ When the ring will not lift a net that has wrapped round a branch, bring the rin
 
 | # | Check | Requirement | How | Pass when |
 | --- | --- | --- | --- | --- |
-| 1 | Pin calibration | R3 | Break ten pins from the reel in a test fork on CalRig, pulling slowly | All ten break between 256 and 347 N; otherwise change the wire diameter and repeat |
+| 1 | Pin calibration | R3 (PR-003, PR-011) | Break ten pins from the reel in a test fork on CalRig, pulling slowly | All ten break between 256 and 347 N; otherwise change the wire diameter and repeat |
 | 2 | Ring fit | R6 | Close the ring on lines of 4, 8, 12 and 16 mm; slide it 1 m along each | Closes on every line and slides without catching |
 | 3 | Pole and joints | R2, R7 | Assemble, measure from 300 below the cap to the ring centre; pack the sections | At least 4.0 m; longest piece under 1.6 m; joints have no play you can feel |
 | 4 | Release on a bench snag | R1, R3 | Ring on a rope hooked over a fixed log, crew rope at 30 N, pull up the pole on a spring balance | Rope lifts clear below the pin rating, or the pin breaks inside its band and the pole comes away cleanly |
 | 5 | Mass | R7 | Weigh the kit carried to and from the canoe (without the crutch and the jigging weight), aluminium and bamboo | Recorded against R7 (4 kg) |
 | 6 | Float | R7, R8 | Hang the ring and cord on the winder in water | Floats |
-| 7 | Canoe heel | R3 | With the canoe moored in shallow, calm water, crew aboard in life jackets, pull the pole sideways from a fixed point ashore with a spring balance up to the pin rating; read the heel with an inclinometer | Heel at 347 N is 5 deg or less |
+| 7 | Canoe heel | R3 | With the canoe moored in shallow, calm water, crew aboard in life jackets, pull the pole sideways from a fixed point ashore with a spring balance up to the pin rating; read the heel with an inclinometer | Heel at 347 N is 5 deg or less, and the canoe's displacement x GM, worked out from the heel and the known heeling moment, is at least about 260 kg m with a margin (Amish's decision O9). Also record the roll period (time ten rolls after a push) and the peak heel when the pole is jerked up sharply to 347 N, as decision O6 asks (SMR-DEC-001); a 1.7 mm pin only if the jerk peak passes 5 deg |
 | 8 | Hook head on a bench wrap | R1 | Rope wrapped once round a fixed log, crew rope at 30 N; work it back with the hook head, then lift with the ring | The wrap comes back half a turn below the pin rating, or the pin breaks inside its band |
 | 9 | Bamboo pole | R2, R7 | Bend-test every culm; assemble and repeat check 3 | Every culm sags 2.9 mm or less; reach and packed length as check 3 |
 
@@ -418,7 +426,8 @@ Work stops at each of these points and goes on only when everything listed is tr
 - **S1, before welding:** working in the open, nothing galvanised in the weld zone, eye and hand protection on.
 - **S2, before fitting any shear pin:** its reel has passed check 1; no other pin, nail, bolt or wire is in the kit.
 - **S3, before taking the kit onto a canoe:** checks 2 to 6 passed; the crutch is clamped and pulled by hand; every person has a life jacket on.
-- **S4, before the heel test (check 7) or any use on a snag:** the canoe is at least 7 m long with at least three crew (a smaller canoe class only once heel tests have set a pin for it), moored or in shallow, calm water; the operator kneels; the crew knows to slacken the line when the operator lifts and to cut the net if the canoe heels; nobody enters the water for any reason.
+- **S4, before the heel test (check 7) or any use on a snag:** the canoe is at least 7 m long with at least three crew (a smaller canoe class only once heel tests have set a pin for it) and has passed the measured righting-moment criterion of check 7 (O9), moored or in shallow, calm water; the operator kneels; the crew knows to slacken the line when the operator lifts and to cut the net if the canoe heels; nobody enters the water for any reason.
+- **S4a, while working a snag:** lift steadily, never jerk the pole. A sudden jerk held just under the pin can heel the design canoe about 6.5 deg, past the 5 deg static limit (SMR-CAL-001, dynamic heel); the rule is on the kit's tag (Amish's decision O6, 2026-10-25).
 - **S5, after every pin break:** the operator is back in a kneeling position, the ring or hook head is recovered on its tether, and a calibrated pin is fitted before the next try.
 
 ## 7. Tools, skills and workspace
